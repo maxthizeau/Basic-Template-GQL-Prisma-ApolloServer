@@ -1,9 +1,6 @@
 1. Apollo Server Express
-   Get a server running
+   Done : Get a server running
 2. GraphQL Tool
-   Build
-
+   Done : Build & Factorize
 3. Prisma
-   Connect to database
-
-GraphQL
+   Done : Models + Connect to database

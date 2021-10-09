@@ -1,11 +1,10 @@
 import { ApolloServer, gql } from "apollo-server-express"
 import express from "express"
 import { createServer } from "http"
-import { execute, subscribe } from "graphql"
 import { makeExecutableSchema } from "@graphql-tools/schema"
-import { books } from "@src/data/books"
 import resolvers from "@src/graphql/resolvers/resolverMap"
 import typeDefs from "@src/graphql/typedefs/typedefsMap"
+import { context } from "@src/graphql/prismaContext"
 
 async function startApolloServer(typeDefs, resolvers) {
   const app = express()
@@ -13,6 +12,7 @@ async function startApolloServer(typeDefs, resolvers) {
   const schema = makeExecutableSchema({ typeDefs, resolvers })
   const server = new ApolloServer({
     schema,
+    context,
   })
   await server.start()
   server.applyMiddleware({ app })

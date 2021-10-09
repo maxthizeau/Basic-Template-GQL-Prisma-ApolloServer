@@ -1,23 +1,16 @@
 import { IResolvers } from "@graphql-tools/utils/Interfaces"
-import { books } from "@src/data/books"
+import { Context } from "../prismaContext"
 
 const bookMutations: IResolvers = {
   Mutation: {
-    createBook: (_root, args) => {
-      const index = books.length + 1
-      books.push({ id: index, title: args.title, author: args.author })
-      return books[index - 1]
+    createBook: async (_root, args, context: Context) => {
+      return await context.prisma.book.create({ data: { ...args } })
     },
-    updateBook: (_root, args) => {
-      const index = books.findIndex((x) => x.id === Number(args.id))
-      books[index] = { ...books[index], ...args.data }
-      return books[index]
+    updateBook: async (_root, args, context: Context) => {
+      return await context.prisma.book.update({ where: { id: Number(args.id) }, data: { ...args.data } })
     },
-    deleteBook: (_root, args) => {
-      const index = books.findIndex((x) => x.id === Number(args.id))
-      const returnedBook = books[index]
-      books.splice(index, 1)
-      return returnedBook
+    deleteBook: async (_root, args, context: Context) => {
+      return await context.prisma.book.delete({ where: { id: Number(args.id) } })
     },
   },
 }
