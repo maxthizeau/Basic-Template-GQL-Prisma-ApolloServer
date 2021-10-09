@@ -29,3 +29,5 @@ I tried to organize schema definition (resolvers/typedefs) to facilitate working
    Done : Build & Factorize
 3. Prisma
    Done : Models + Connect to database
+4. From this template, create a To Do App
+   WiP : repository link to be added
