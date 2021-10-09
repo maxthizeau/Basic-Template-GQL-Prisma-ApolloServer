@@ -1,3 +1,10 @@
+Basic Template using :
+
+- Apollo Server Express
+- GraphQL
+- Prisma
+- PostgreSQL databse
+
 1. Apollo Server Express
    Done : Get a server running
 2. GraphQL Tool
