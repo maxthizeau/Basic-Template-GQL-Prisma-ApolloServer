@@ -24,10 +24,10 @@ I tried to organize schema definition (resolvers/typedefs) to facilitate working
 ## Work done/to do
 
 1. Apollo Server Express
-   Done : Get a server running
+   - Done : Get a server running
 2. GraphQL Tool
-   Done : Build & Factorize
+   - Done : Build & Factorize
 3. Prisma
-   Done : Models + Connect to database
+   - Done : Models + Connect to database
 4. From this template, create a To Do App
-   WiP : repository link to be added
+   - WiP : repository link to be added
