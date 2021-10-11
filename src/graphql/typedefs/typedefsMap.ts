@@ -1,7 +1,12 @@
 import { gql } from "apollo-server-express"
 import bookTypeDefs from "./book"
+import user from "./user"
 
 const rootTypeDefs = gql`
+  type SuccessMessage {
+    success: Boolean!
+    message: String
+  }
   type Query {
     root: String!
   }
@@ -10,5 +15,5 @@ const rootTypeDefs = gql`
   }
 `
 
-const typeDefs = [rootTypeDefs, bookTypeDefs]
+const typeDefs = [rootTypeDefs, bookTypeDefs, user]
 export default typeDefs

@@ -1,33 +1,17 @@
-Basic Template using :
+## Database Structure
 
-- Apollo Server Express
-- GraphQL
-- Prisma
-- PostgreSQL databse
-
-I tried to organize schema definition (resolvers/typedefs) to facilitate working on bigger projects from this template.
-
-## TypeDefs Structure
-
-1. Each Model has a typedef file (ex : book)
-   - "Query" and "Mutation" need "extend"
-   - Define "type" (Book) and "input" (CreateBookInput, UpdateBookInput)
-2. Each typedef file is imported in typedefsMap which is imported in the schema (in server.js)
-
-## Resolvers Structure
-
-1. There is a separate file for each type Queries and Mutations (ex : for the type Book, there is a "bookQueries" and "bookMutations" file)
-2. Resolve code is in those files
-3. Possibility to organize more by putting those files in a folder named by the type (./resolvers/book/bookMutations)
-4. Those files are imported in "resolverMap" which is imported in the schema (server.js)
+1. User
+   - Every user should have at least one team with himself
+2. Team
+   - Team can have many Users and many Admins
+3. Task
+   - Task is always assigned to a TaskGroup
+4. TaskGroup
+   - TaskGroup is always assigned to a Board
+5. Board
+   - Board is always assigned to a Team (even if the Team only has one User)
 
 ## Work done/to do
 
-1. Apollo Server Express
-   - Done : Get a server running
-2. GraphQL Tool
-   - Done : Build & Factorize
-3. Prisma
-   - Done : Models + Connect to database
-4. From this template, create a To Do App
-   - WiP : repository link to be added
+- Maybe : Add Codegen to generate schema.graphql + all types
+- Add global function to solve "Where", "OrderBy", "First", "Skip",
