@@ -13,5 +13,5 @@
 
 ## Work done/to do
 
-- Maybe : Add Codegen to generate schema.graphql + all types
+- Build a Package that generate all User Input + queries + Mutations based on user typedefs
 - Add global function to solve "Where", "OrderBy", "First", "Skip",
