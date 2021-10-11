@@ -1,6 +1,7 @@
 import { gql } from "apollo-server-express"
-import bookTypeDefs from "./book"
-import user from "./user"
+// import { bookTypeDefs, book } from "./book"
+import { user, userTypesDefs } from "./user"
+import { userInputs } from "../../generated/userInputs"
 
 const rootTypeDefs = gql`
   type SuccessMessage {
@@ -15,5 +16,5 @@ const rootTypeDefs = gql`
   }
 `
 
-const typeDefs = [rootTypeDefs, bookTypeDefs, user]
+const typeDefs = [rootTypeDefs, user, userTypesDefs, userInputs]
 export default typeDefs
