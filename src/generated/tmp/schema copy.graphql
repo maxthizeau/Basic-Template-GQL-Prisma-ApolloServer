@@ -260,6 +260,11 @@ scalar ObjectID
 """Represents NULL values"""
 scalar Void
 
+type SuccessMessage {
+  success: Boolean!
+  message: String
+}
+
 type Query {
   root: String!
   user(where: WhereUniqueUserInput!): User
@@ -301,8 +306,8 @@ type User {
   password: String
   registeredAt: DateTime
   updatedAt: DateTime
-  teamsMember: [Team]
-  teamsAdmin: [Team]
+  teamsMember(where: WhereTeamInput, sortBy: [SortTeamBy], first: Int, skip: Int): [Team]
+  teamsAdmin(where: WhereTeamInput, sortBy: [SortTeamBy], first: Int, skip: Int): [Team]
   boards(where: WhereBoardInput, sortBy: [SortBoardBy], first: Int, skip: Int): [Board]
 }
 
@@ -369,6 +374,7 @@ input WhereUserInput {
   teamsAdmin_is_null: Boolean
   boards: WhereBoardInput
   boards_is_null: Boolean
+  boards_where: WhereBoardInput
 }
 
 input WhereUniqueUserInput {
@@ -416,7 +422,7 @@ type Board {
   id: Int!
   name: String
   description: String
-  taskGroups(where: WhereTaskGroupInput, sortBy: [SortTaskGroupBy], first: Int, skip: Int): [TaskGroup]
+  taskGroups: [TaskGroup]
   team: Team
   owner: User
 }
@@ -424,17 +430,11 @@ type Board {
 input CreateBoardInput {
   name: String!
   description: String
-  taskGroups: RelateToManyTaskGroupInput
-  team: RelateToOneTeamInput
-  owner: RelateToOneUserInput
 }
 
 input UpdateBoardInput {
   name: String
   description: String
-  taskGroups: RelateToManyTaskGroupInput
-  team: RelateToOneTeamInput
-  owner: RelateToOneUserInput
 }
 
 input WhereBoardInput {
@@ -509,13 +509,11 @@ type Task {
 input CreateTaskInput {
   name: String!
   description: String
-  taskGroup: RelateToOneTaskGroupInput
 }
 
 input UpdateTaskInput {
   name: String
   description: String
-  taskGroup: RelateToOneTaskGroupInput
 }
 
 input WhereTaskInput {
@@ -576,22 +574,18 @@ type TaskGroup {
   id: Int!
   name: String
   description: String
-  tasks(where: WhereTaskInput, sortBy: [SortTaskBy], first: Int, skip: Int): [Task]
+  tasks: [Task]
   board: Board
 }
 
 input CreateTaskGroupInput {
   name: String!
   description: String
-  tasks: RelateToManyTaskInput
-  board: RelateToOneBoardInput
 }
 
 input UpdateTaskGroupInput {
   name: String
   description: String
-  tasks: RelateToManyTaskInput
-  board: RelateToOneBoardInput
 }
 
 input WhereTaskGroupInput {
@@ -656,23 +650,17 @@ type Team {
   id: Int!
   publicId: String
   name: String
-  members(where: WhereUserInput, sortBy: [SortUserBy], first: Int, skip: Int): [User]
-  admins(where: WhereUserInput, sortBy: [SortUserBy], first: Int, skip: Int): [User]
-  boards(where: WhereBoardInput, sortBy: [SortBoardBy], first: Int, skip: Int): [Board]
+  members: [User]
+  admins: [User]
+  boards: [Board]
 }
 
 input CreateTeamInput {
   name: String!
-  members: RelateToManyUserInput
-  admins: RelateToManyUserInput
-  boards: RelateToManyBoardInput
 }
 
 input UpdateTeamInput {
   name: String
-  members: RelateToManyUserInput
-  admins: RelateToManyUserInput
-  boards: RelateToManyBoardInput
 }
 
 input WhereTeamInput {

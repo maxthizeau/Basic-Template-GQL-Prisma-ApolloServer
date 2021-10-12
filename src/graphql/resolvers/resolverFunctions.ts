@@ -1,10 +1,11 @@
-import { WhereUserInput, QueryAllUsersArgs } from "@src/generated/graphql"
+// import { WhereUserInput, QueryAllUsersArgs, QueryAllBoardsArgs } from "@src/generated/graphql"
 import { Prisma } from ".prisma/client"
 
-type PrismaWhereInput = Prisma.UserWhereInput
-type QueryAllArgs = QueryAllUsersArgs
-type FindManyArgs = Prisma.UserFindManyArgs
-type OrderByWithRelationInput = Prisma.UserOrderByWithRelationInput
+type PrismaWhereInput = Prisma.UserWhereInput | Prisma.BoardWhereInput
+type QueryAllArgs = any
+// type QueryAllArgs = QueryAllUsersArgs | QueryAllBoardsArgs
+type FindManyArgs = Prisma.UserFindManyArgs | Prisma.BoardFindManyArgs
+type OrderByWithRelationInput = Prisma.UserOrderByWithRelationInput | Prisma.BoardOrderByWithRelationInput
 
 function generatePrismaWhere(inputWhere): PrismaWhereInput {
   const whereFinal: PrismaWhereInput = {}
@@ -54,7 +55,8 @@ function generatePrismaWhere(inputWhere): PrismaWhereInput {
   return whereFinal
 }
 
-export function getWhereSortByFirstSkipRequest(args: QueryAllUsersArgs): any {
+export function getWhereSortByFirstSkipRequest(args: QueryAllArgs): any {
+  // console.log("test")
   const { where, first, skip, sortBy } = args
 
   const finalReturnedQuery: FindManyArgs = {}

@@ -1,9 +1,10 @@
+import { WhereBoardInput } from "./graphql"
 // This file has been generated. DO NOT MODIFY
 
 import { gql } from "apollo-server-express"
 
 export const userInputs = gql`
-  input WhereUserInput { 
+  input WhereUserInput {
     AND: [WhereUserInput]
     OR: [WhereUserInput]
     id_is: Int
@@ -54,13 +55,14 @@ export const userInputs = gql`
     teamsAdmin_is_null: Boolean
     boards: WhereBoardInput
     boards_is_null: Boolean
+    boards_where: WhereBoardInput
   }
 
-  input WhereUniqueUserInput { 
-    id: Int! 
+  input WhereUniqueUserInput {
+    id: Int!
   }
 
-  enum SortUserBy { 
+  enum SortUserBy {
     id_ASC
     id_DESC
     publicId_ASC
@@ -83,23 +85,22 @@ export const userInputs = gql`
     boards_DESC
   }
 
-  input RelateToManyUserInput { 
+  input RelateToManyUserInput {
     create: [CreateUserInput]
     connect: [WhereUniqueUserInput]
     disconnect: [WhereUniqueUserInput]
     disconnectAll: Boolean
-}
+  }
 
-  input RelateToOneUserInput { 
+  input RelateToOneUserInput {
     create: CreateUserInput
     connect: WhereUniqueUserInput
     disconnect: WhereUniqueUserInput
     disconnectAll: Boolean
-}
+  }
 
   extend type Query {
     user(where: WhereUniqueUserInput!): User
     allUsers(where: WhereUserInput, sortBy: [SortUserBy!], first: Int, skip: Int): [User]
   }
-
 `

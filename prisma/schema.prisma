@@ -7,58 +7,52 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Book {
-  id     Int    @id @default(autoincrement())
-  title  String
-  author String
-}
-
 model User {
   id           Int      @id @default(autoincrement())
   publicId     String   @unique
   name         String   @db.VarChar(255)
-  email        String   @unique
-  password     String
   registeredAt DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  teamsMember  Team[]   @relation(name: "members")
-  teamsAdmin   Team[]   @relation(name: "admins")
-  Board        Board[]
+  email        String   @unique
+  password     String
+  boards       Board[]
+  teamsAdmin   Team[]   @relation("admins")
+  teamsMember  Team[]   @relation("members")
 }
 
 model Team {
   id       Int     @id @default(autoincrement())
   publicId String  @unique
   name     String
-  members  User[]  @relation(name: "members")
-  admins   User[]  @relation(name: "admins")
-  Board    Board[]
+  boards   Board[]
+  admins   User[]  @relation("admins")
+  members  User[]  @relation("members")
 }
 
 model Task {
   id          Int       @id @default(autoincrement())
   name        String
   description String?
-  taskGroup   TaskGroup @relation(fields: [taskGroupId], references: [id])
   taskGroupId Int
+  taskGroup   TaskGroup @relation(fields: [taskGroupId], references: [id])
 }
 
 model TaskGroup {
   id          Int     @id @default(autoincrement())
   name        String
   description String?
-  tasks       Task[]
-  board       Board   @relation(fields: [boardId], references: [id])
   boardId     Int
+  board       Board   @relation(fields: [boardId], references: [id])
+  tasks       Task[]
 }
 
 model Board {
   id          Int         @id @default(autoincrement())
   name        String
   description String?
-  taskGroups  TaskGroup[]
-  team        Team?       @relation(fields: [teamId], references: [id])
-  owner       User        @relation(fields: [ownerId], references: [id])
   ownerId     Int
   teamId      Int?
+  owner       User        @relation(fields: [ownerId], references: [id])
+  team        Team?       @relation(fields: [teamId], references: [id])
+  taskGroups  TaskGroup[]
 }

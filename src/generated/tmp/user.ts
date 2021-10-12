@@ -9,9 +9,9 @@ const user = gql`
     password: String
     registeredAt: DateTime
     updatedAt: DateTime
-    teamsMember: [Team]
-    teamsAdmin: [Team]
-    boards(where: WhereBoardInput, sortBy: [SortBoardBy], first: Int, skip: Int): [Board]
+    # teamsMember(where: WhereTeamInput, sortBy: [SortTeamBy], first: Int, skip: Int): [Team]
+    # teamsAdmin(where: WhereTeamInput, sortBy: [SortTeamBy], first: Int, skip: Int): [Team]
+    # boards(where: WhereBoardInput, sortBy: [SortBoardBy], first: Int, skip: Int): [Board]
   }
 `
 
@@ -24,7 +24,7 @@ const userTypesDefs = gql`
   input UpdateUserInput {
     name: String
     password: String
-    boards: RelateToManyBoardInput
+    # boards: RelateToManyBoardInput
   }
 
   # extend type Query {
@@ -33,8 +33,8 @@ const userTypesDefs = gql`
   # }
 
   extend type Mutation {
-    createUser(data: CreateUserInput!): User!
-    updateUser(id: Int!, data: UpdateUserInput!): User!
+    # createUser(data: CreateUserInput!): User!
+    # updateUser(id: Int!, data: UpdateUserInput!): User!
     deleteUser(id: Int!): User
   }
 `

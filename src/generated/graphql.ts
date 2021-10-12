@@ -152,16 +152,32 @@ export type Scalars = {
   Void: any;
 };
 
-export type Book = {
-  __typename?: 'Book';
-  author?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
-  title?: Maybe<Scalars['String']>;
+export type Board = {
+  __typename?: 'Board';
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  owner?: Maybe<User>;
+  team?: Maybe<Team>;
 };
 
-export type BookUpdateInput = {
-  author?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
+export type CreateBoardInput = {
+  description?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type CreateTaskGroupInput = {
+  description?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type CreateTaskInput = {
+  description?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+export type CreateTeamInput = {
+  name: Scalars['String'];
 };
 
 export type CreateUserInput = {
@@ -172,19 +188,42 @@ export type CreateUserInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createBook?: Maybe<Book>;
+  createBoard: Board;
+  createTask: Task;
+  createTaskGroup: TaskGroup;
+  createTeam: Team;
   createUser: User;
-  deleteBook?: Maybe<Book>;
+  deleteBoard?: Maybe<Board>;
+  deleteTask?: Maybe<Task>;
+  deleteTaskGroup?: Maybe<TaskGroup>;
+  deleteTeam?: Maybe<Team>;
   deleteUser?: Maybe<User>;
   root: Scalars['String'];
-  updateBook?: Maybe<Book>;
+  updateBoard: Board;
+  updateTask: Task;
+  updateTaskGroup: TaskGroup;
+  updateTeam: Team;
   updateUser: User;
 };
 
 
-export type MutationCreateBookArgs = {
-  author: Scalars['String'];
-  title: Scalars['String'];
+export type MutationCreateBoardArgs = {
+  data: CreateBoardInput;
+};
+
+
+export type MutationCreateTaskArgs = {
+  data: CreateTaskInput;
+};
+
+
+export type MutationCreateTaskGroupArgs = {
+  data: CreateTaskGroupInput;
+};
+
+
+export type MutationCreateTeamArgs = {
+  data: CreateTeamInput;
 };
 
 
@@ -193,77 +232,105 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationDeleteBookArgs = {
-  id: Scalars['ID'];
+export type MutationDeleteBoardArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteTaskArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteTaskGroupArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteTeamArgs = {
+  id: Scalars['Int'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+  id: Scalars['Int'];
 };
 
 
-export type MutationUpdateBookArgs = {
-  data: BookUpdateInput;
-  id: Scalars['ID'];
+export type MutationUpdateBoardArgs = {
+  data: UpdateBoardInput;
+  id: Scalars['Int'];
+};
+
+
+export type MutationUpdateTaskArgs = {
+  data: UpdateTaskInput;
+  id: Scalars['Int'];
+};
+
+
+export type MutationUpdateTaskGroupArgs = {
+  data: UpdateTaskGroupInput;
+  id: Scalars['Int'];
+};
+
+
+export type MutationUpdateTeamArgs = {
+  data: UpdateTeamInput;
+  id: Scalars['Int'];
 };
 
 
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
-  id: Scalars['ID'];
+  id: Scalars['Int'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  allBooks: Array<Book>;
-  allUsers?: Maybe<Array<Maybe<User>>>;
-  book: Book;
   root: Scalars['String'];
-  user?: Maybe<User>;
 };
 
-
-export type QueryAllUsersArgs = {
-  first?: Maybe<Scalars['Int']>;
-  skip?: Maybe<Scalars['Int']>;
-  sortBy?: Maybe<Array<SortUserBy>>;
-  where?: Maybe<WhereUserInput>;
+export type Task = {
+  __typename?: 'Task';
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  taskGroup?: Maybe<TaskGroup>;
 };
 
-
-export type QueryBookArgs = {
-  id: Scalars['ID'];
+export type TaskGroup = {
+  __typename?: 'TaskGroup';
+  board?: Maybe<Board>;
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
 };
 
-
-export type QueryUserArgs = {
-  where: WhereUniqueUserInput;
+export type Team = {
+  __typename?: 'Team';
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  publicId?: Maybe<Scalars['String']>;
 };
 
-export enum SortUserBy {
-  BoardAsc = 'board_ASC',
-  BoardDesc = 'board_DESC',
-  EmailAsc = 'email_ASC',
-  EmailDesc = 'email_DESC',
-  IdAsc = 'id_ASC',
-  IdDesc = 'id_DESC',
-  NameAsc = 'name_ASC',
-  NameDesc = 'name_DESC',
-  PublicIdAsc = 'publicId_ASC',
-  PublicIdDesc = 'publicId_DESC',
-  RegisteredAtAsc = 'registeredAt_ASC',
-  RegisteredAtDesc = 'registeredAt_DESC',
-  TeamsAdminAsc = 'teamsAdmin_ASC',
-  TeamsAdminDesc = 'teamsAdmin_DESC',
-  TeamsMemberAsc = 'teamsMember_ASC',
-  TeamsMemberDesc = 'teamsMember_DESC'
-}
+export type UpdateBoardInput = {
+  description?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
 
-export type SuccessMessage = {
-  __typename?: 'SuccessMessage';
-  message?: Maybe<Scalars['String']>;
-  success: Scalars['Boolean'];
+export type UpdateTaskGroupInput = {
+  description?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type UpdateTaskInput = {
+  description?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type UpdateTeamInput = {
+  name?: Maybe<Scalars['String']>;
 };
 
 export type UpdateUserInput = {
@@ -274,33 +341,12 @@ export type UpdateUserInput = {
 export type User = {
   __typename?: 'User';
   email?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
   publicId?: Maybe<Scalars['String']>;
   registeredAt?: Maybe<Scalars['DateTime']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
-};
-
-export type WhereUniqueUserInput = {
-  id: Scalars['ID'];
-};
-
-export type WhereUserInput = {
-  AND?: Maybe<Array<Maybe<WhereUserInput>>>;
-  OR?: Maybe<Array<Maybe<WhereUserInput>>>;
-  email_is?: Maybe<Scalars['String']>;
-  email_not?: Maybe<Scalars['String']>;
-  id_is?: Maybe<Scalars['ID']>;
-  id_not?: Maybe<Scalars['ID']>;
-  name_is?: Maybe<Scalars['String']>;
-  name_not?: Maybe<Scalars['String']>;
-  publicId_is?: Maybe<Scalars['String']>;
-  publicId_not?: Maybe<Scalars['String']>;
-  registeredAt_gt?: Maybe<Scalars['DateTime']>;
-  registeredAt_gte?: Maybe<Scalars['DateTime']>;
-  registeredAt_lt?: Maybe<Scalars['DateTime']>;
-  registeredAt_lte?: Maybe<Scalars['DateTime']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -374,10 +420,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
-  Book: ResolverTypeWrapper<Book>;
-  BookUpdateInput: BookUpdateInput;
+  Board: ResolverTypeWrapper<Board>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Byte: ResolverTypeWrapper<Scalars['Byte']>;
+  CreateBoardInput: CreateBoardInput;
+  CreateTaskGroupInput: CreateTaskGroupInput;
+  CreateTaskInput: CreateTaskInput;
+  CreateTeamInput: CreateTeamInput;
   CreateUserInput: CreateUserInput;
   Currency: ResolverTypeWrapper<Scalars['Currency']>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
@@ -390,7 +439,6 @@ export type ResolversTypes = ResolversObject<{
   HexColorCode: ResolverTypeWrapper<Scalars['HexColorCode']>;
   Hexadecimal: ResolverTypeWrapper<Scalars['Hexadecimal']>;
   IBAN: ResolverTypeWrapper<Scalars['IBAN']>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
   IPv4: ResolverTypeWrapper<Scalars['IPv4']>;
   IPv6: ResolverTypeWrapper<Scalars['IPv6']>;
   ISBN: ResolverTypeWrapper<Scalars['ISBN']>;
@@ -424,9 +472,10 @@ export type ResolversTypes = ResolversObject<{
   RGB: ResolverTypeWrapper<Scalars['RGB']>;
   RGBA: ResolverTypeWrapper<Scalars['RGBA']>;
   SafeInt: ResolverTypeWrapper<Scalars['SafeInt']>;
-  SortUserBy: SortUserBy;
   String: ResolverTypeWrapper<Scalars['String']>;
-  SuccessMessage: ResolverTypeWrapper<SuccessMessage>;
+  Task: ResolverTypeWrapper<Task>;
+  TaskGroup: ResolverTypeWrapper<TaskGroup>;
+  Team: ResolverTypeWrapper<Team>;
   Time: ResolverTypeWrapper<Scalars['Time']>;
   Timestamp: ResolverTypeWrapper<Scalars['Timestamp']>;
   URL: ResolverTypeWrapper<Scalars['URL']>;
@@ -434,21 +483,26 @@ export type ResolversTypes = ResolversObject<{
   UUID: ResolverTypeWrapper<Scalars['UUID']>;
   UnsignedFloat: ResolverTypeWrapper<Scalars['UnsignedFloat']>;
   UnsignedInt: ResolverTypeWrapper<Scalars['UnsignedInt']>;
+  UpdateBoardInput: UpdateBoardInput;
+  UpdateTaskGroupInput: UpdateTaskGroupInput;
+  UpdateTaskInput: UpdateTaskInput;
+  UpdateTeamInput: UpdateTeamInput;
   UpdateUserInput: UpdateUserInput;
   User: ResolverTypeWrapper<User>;
   UtcOffset: ResolverTypeWrapper<Scalars['UtcOffset']>;
   Void: ResolverTypeWrapper<Scalars['Void']>;
-  WhereUniqueUserInput: WhereUniqueUserInput;
-  WhereUserInput: WhereUserInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   BigInt: Scalars['BigInt'];
-  Book: Book;
-  BookUpdateInput: BookUpdateInput;
+  Board: Board;
   Boolean: Scalars['Boolean'];
   Byte: Scalars['Byte'];
+  CreateBoardInput: CreateBoardInput;
+  CreateTaskGroupInput: CreateTaskGroupInput;
+  CreateTaskInput: CreateTaskInput;
+  CreateTeamInput: CreateTeamInput;
   CreateUserInput: CreateUserInput;
   Currency: Scalars['Currency'];
   Date: Scalars['Date'];
@@ -461,7 +515,6 @@ export type ResolversParentTypes = ResolversObject<{
   HexColorCode: Scalars['HexColorCode'];
   Hexadecimal: Scalars['Hexadecimal'];
   IBAN: Scalars['IBAN'];
-  ID: Scalars['ID'];
   IPv4: Scalars['IPv4'];
   IPv6: Scalars['IPv6'];
   ISBN: Scalars['ISBN'];
@@ -496,7 +549,9 @@ export type ResolversParentTypes = ResolversObject<{
   RGBA: Scalars['RGBA'];
   SafeInt: Scalars['SafeInt'];
   String: Scalars['String'];
-  SuccessMessage: SuccessMessage;
+  Task: Task;
+  TaskGroup: TaskGroup;
+  Team: Team;
   Time: Scalars['Time'];
   Timestamp: Scalars['Timestamp'];
   URL: Scalars['URL'];
@@ -504,22 +559,26 @@ export type ResolversParentTypes = ResolversObject<{
   UUID: Scalars['UUID'];
   UnsignedFloat: Scalars['UnsignedFloat'];
   UnsignedInt: Scalars['UnsignedInt'];
+  UpdateBoardInput: UpdateBoardInput;
+  UpdateTaskGroupInput: UpdateTaskGroupInput;
+  UpdateTaskInput: UpdateTaskInput;
+  UpdateTeamInput: UpdateTeamInput;
   UpdateUserInput: UpdateUserInput;
   User: User;
   UtcOffset: Scalars['UtcOffset'];
   Void: Scalars['Void'];
-  WhereUniqueUserInput: WhereUniqueUserInput;
-  WhereUserInput: WhereUserInput;
 }>;
 
 export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
   name: 'BigInt';
 }
 
-export type BookResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = ResolversObject<{
-  author?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type BoardResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Board'] = ResolversParentTypes['Board']> = ResolversObject<{
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  team?: Resolver<Maybe<ResolversTypes['Team']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -628,12 +687,21 @@ export interface MacScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes[
 }
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
-  createBook?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<MutationCreateBookArgs, 'author' | 'title'>>;
+  createBoard?: Resolver<ResolversTypes['Board'], ParentType, ContextType, RequireFields<MutationCreateBoardArgs, 'data'>>;
+  createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'data'>>;
+  createTaskGroup?: Resolver<ResolversTypes['TaskGroup'], ParentType, ContextType, RequireFields<MutationCreateTaskGroupArgs, 'data'>>;
+  createTeam?: Resolver<ResolversTypes['Team'], ParentType, ContextType, RequireFields<MutationCreateTeamArgs, 'data'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'data'>>;
-  deleteBook?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<MutationDeleteBookArgs, 'id'>>;
+  deleteBoard?: Resolver<Maybe<ResolversTypes['Board']>, ParentType, ContextType, RequireFields<MutationDeleteBoardArgs, 'id'>>;
+  deleteTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'id'>>;
+  deleteTaskGroup?: Resolver<Maybe<ResolversTypes['TaskGroup']>, ParentType, ContextType, RequireFields<MutationDeleteTaskGroupArgs, 'id'>>;
+  deleteTeam?: Resolver<Maybe<ResolversTypes['Team']>, ParentType, ContextType, RequireFields<MutationDeleteTeamArgs, 'id'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   root?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  updateBook?: Resolver<Maybe<ResolversTypes['Book']>, ParentType, ContextType, RequireFields<MutationUpdateBookArgs, 'data' | 'id'>>;
+  updateBoard?: Resolver<ResolversTypes['Board'], ParentType, ContextType, RequireFields<MutationUpdateBoardArgs, 'data' | 'id'>>;
+  updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'data' | 'id'>>;
+  updateTaskGroup?: Resolver<ResolversTypes['TaskGroup'], ParentType, ContextType, RequireFields<MutationUpdateTaskGroupArgs, 'data' | 'id'>>;
+  updateTeam?: Resolver<ResolversTypes['Team'], ParentType, ContextType, RequireFields<MutationUpdateTeamArgs, 'data' | 'id'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'data' | 'id'>>;
 }>;
 
@@ -690,11 +758,7 @@ export interface PostalCodeScalarConfig extends GraphQLScalarTypeConfig<Resolver
 }
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  allBooks?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType>;
-  allUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType, RequireFields<QueryAllUsersArgs, never>>;
-  book?: Resolver<ResolversTypes['Book'], ParentType, ContextType, RequireFields<QueryBookArgs, 'id'>>;
   root?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'where'>>;
 }>;
 
 export interface RgbScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RGB'], any> {
@@ -709,9 +773,26 @@ export interface SafeIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTy
   name: 'SafeInt';
 }
 
-export type SuccessMessageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['SuccessMessage'] = ResolversParentTypes['SuccessMessage']> = ResolversObject<{
-  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+export type TaskResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = ResolversObject<{
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  taskGroup?: Resolver<Maybe<ResolversTypes['TaskGroup']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type TaskGroupResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TaskGroup'] = ResolversParentTypes['TaskGroup']> = ResolversObject<{
+  board?: Resolver<Maybe<ResolversTypes['Board']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type TeamResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Team'] = ResolversParentTypes['Team']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  publicId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -745,7 +826,7 @@ export interface UnsignedIntScalarConfig extends GraphQLScalarTypeConfig<Resolve
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   publicId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -764,7 +845,7 @@ export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 
 export type Resolvers<ContextType = Context> = ResolversObject<{
   BigInt?: GraphQLScalarType;
-  Book?: BookResolvers<ContextType>;
+  Board?: BoardResolvers<ContextType>;
   Byte?: GraphQLScalarType;
   Currency?: GraphQLScalarType;
   Date?: GraphQLScalarType;
@@ -809,7 +890,9 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   RGB?: GraphQLScalarType;
   RGBA?: GraphQLScalarType;
   SafeInt?: GraphQLScalarType;
-  SuccessMessage?: SuccessMessageResolvers<ContextType>;
+  Task?: TaskResolvers<ContextType>;
+  TaskGroup?: TaskGroupResolvers<ContextType>;
+  Team?: TeamResolvers<ContextType>;
   Time?: GraphQLScalarType;
   Timestamp?: GraphQLScalarType;
   URL?: GraphQLScalarType;
