@@ -1,5 +1,4 @@
 import { gql } from "apollo-server-express"
-// import { bookTypeDefs, book } from "./book"
 import { user, userTypesDefs } from "./user"
 import { board, boardTypesDefs } from "./board"
 import { task, taskTypesDefs } from "./task"
@@ -10,6 +9,8 @@ import { boardInputs } from "@src/generated/boardInputs"
 import { taskInputs } from "@src/generated/taskInputs"
 import { taskGroupInputs } from "@src/generated/taskGroupInputs"
 import { teamInputs } from "@src/generated/teamInputs"
+import { userOnTeam, userOnTeamTypesDefs } from "./userOnTeam"
+import { userOnTeamInputs } from "../../generated/userOnTeamInputs"
 
 const rootTypeDefs = gql`
   type Query {
@@ -37,5 +38,12 @@ const typeDefs = [
   team,
   teamTypesDefs,
   teamInputs,
+  userOnTeam,
+  userOnTeamTypesDefs,
+  userOnTeamInputs,
 ]
+
+// typeDefs.forEach((element) => {
+//   console.log(element.definitions)
+// })
 export default typeDefs

@@ -24,10 +24,8 @@ export const teamInputs = gql`
     name_lte: String
     name_gt: String
     name_gte: String
-    members: WhereUserInput
+    members: WhereUserOnTeamInput
     members_is_null: Boolean
-    admins: WhereUserInput
-    admins_is_null: Boolean
     boards: WhereBoardInput
     boards_is_null: Boolean
   }
@@ -45,8 +43,6 @@ export const teamInputs = gql`
     name_DESC
     members_ASC
     members_DESC
-    admins_ASC
-    admins_DESC
     boards_ASC
     boards_DESC
   }

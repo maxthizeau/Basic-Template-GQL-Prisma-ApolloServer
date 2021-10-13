@@ -9,8 +9,7 @@ const user = gql`
     password: String
     registeredAt: DateTime
     updatedAt: DateTime
-    teamsMember: [Team]
-    teamsAdmin: [Team]
+    teams: UserOnTeam
     boards(where: WhereBoardInput, sortBy: [SortBoardBy], first: Int, skip: Int): [Board]
   }
 `
@@ -20,10 +19,13 @@ const userTypesDefs = gql`
     name: String!
     email: String!
     password: String!
+    teams: RelateToManyUserOnTeamInput
+    boards: RelateToManyBoardInput
   }
   input UpdateUserInput {
     name: String
     password: String
+    teams: RelateToManyUserOnTeamInput
     boards: RelateToManyBoardInput
   }
 

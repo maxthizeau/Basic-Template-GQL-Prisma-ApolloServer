@@ -8,25 +8,31 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  publicId     String   @unique
-  name         String   @db.VarChar(255)
-  registeredAt DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  email        String   @unique
+  id           Int           @id @default(autoincrement())
+  publicId     String        @unique
+  name         String        @db.VarChar(255)
+  registeredAt DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  email        String        @unique
   password     String
   boards       Board[]
-  teamsAdmin   Team[]   @relation("admins")
-  teamsMember  Team[]   @relation("members")
+  teams        UsersOnTeam[]
 }
 
 model Team {
-  id       Int     @id @default(autoincrement())
-  publicId String  @unique
-  name     String
-  boards   Board[]
-  admins   User[]  @relation("admins")
-  members  User[]  @relation("members")
+  id      Int           @id @default(autoincrement())
+  name    String
+  boards  Board[]
+  members UsersOnTeam[]
+}
+
+model UsersOnTeam {
+  id      Int     @id @default(autoincrement())
+  user    User    @relation(fields: [userId], references: [id])
+  userId  Int
+  team    Team    @relation(fields: [teamId], references: [id])
+  teamId  Int
+  isAdmin Boolean
 }
 
 model Task {

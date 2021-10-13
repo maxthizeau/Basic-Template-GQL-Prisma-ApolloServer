@@ -158,32 +158,57 @@ export type Board = {
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   owner?: Maybe<User>;
+  taskGroups?: Maybe<Array<Maybe<TaskGroup>>>;
   team?: Maybe<Team>;
+};
+
+
+export type BoardTaskGroupsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<Maybe<SortTaskGroupBy>>>;
+  where?: Maybe<WhereTaskGroupInput>;
 };
 
 export type CreateBoardInput = {
   description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  owner?: Maybe<RelateToOneUserInput>;
+  taskGroups?: Maybe<RelateToManyTaskGroupInput>;
+  team?: Maybe<RelateToOneTeamInput>;
 };
 
 export type CreateTaskGroupInput = {
+  board?: Maybe<RelateToOneBoardInput>;
   description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  tasks?: Maybe<RelateToManyTaskInput>;
 };
 
 export type CreateTaskInput = {
   description?: Maybe<Scalars['String']>;
   name: Scalars['String'];
+  taskGroup?: Maybe<RelateToOneTaskGroupInput>;
 };
 
 export type CreateTeamInput = {
+  boards?: Maybe<RelateToManyBoardInput>;
+  members?: Maybe<RelateToManyUserOnTeamInput>;
   name: Scalars['String'];
 };
 
 export type CreateUserInput = {
+  boards?: Maybe<RelateToManyBoardInput>;
   email: Scalars['String'];
   name: Scalars['String'];
   password: Scalars['String'];
+  teams?: Maybe<RelateToManyUserOnTeamInput>;
+};
+
+export type CreateUserOnTeamInput = {
+  isAdmin?: Maybe<Scalars['Boolean']>;
+  team?: Maybe<RelateToOneTeamInput>;
+  user?: Maybe<RelateToOneUserInput>;
 };
 
 export type Mutation = {
@@ -193,17 +218,20 @@ export type Mutation = {
   createTaskGroup: TaskGroup;
   createTeam: Team;
   createUser: User;
+  createUserOnTeam: UserOnTeam;
   deleteBoard?: Maybe<Board>;
   deleteTask?: Maybe<Task>;
   deleteTaskGroup?: Maybe<TaskGroup>;
   deleteTeam?: Maybe<Team>;
   deleteUser?: Maybe<User>;
+  deleteUserOnTeam?: Maybe<UserOnTeam>;
   root: Scalars['String'];
   updateBoard: Board;
   updateTask: Task;
   updateTaskGroup: TaskGroup;
   updateTeam: Team;
   updateUser: User;
+  updateUserOnTeam: UserOnTeam;
 };
 
 
@@ -232,6 +260,11 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationCreateUserOnTeamArgs = {
+  data: CreateUserOnTeamInput;
+};
+
+
 export type MutationDeleteBoardArgs = {
   id: Scalars['Int'];
 };
@@ -253,6 +286,11 @@ export type MutationDeleteTeamArgs = {
 
 
 export type MutationDeleteUserArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteUserOnTeamArgs = {
   id: Scalars['Int'];
 };
 
@@ -286,10 +324,274 @@ export type MutationUpdateUserArgs = {
   id: Scalars['Int'];
 };
 
+
+export type MutationUpdateUserOnTeamArgs = {
+  data: UpdateUserOnTeamInput;
+  id: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  allBoards?: Maybe<Array<Maybe<Board>>>;
+  allTaskGroups?: Maybe<Array<Maybe<TaskGroup>>>;
+  allTasks?: Maybe<Array<Maybe<Task>>>;
+  allTeams?: Maybe<Array<Maybe<Team>>>;
+  allUserOnTeams?: Maybe<Array<Maybe<UserOnTeam>>>;
+  allUsers?: Maybe<Array<Maybe<User>>>;
+  board?: Maybe<Board>;
   root: Scalars['String'];
+  task?: Maybe<Task>;
+  taskGroup?: Maybe<TaskGroup>;
+  team?: Maybe<Team>;
+  user?: Maybe<User>;
+  userOnTeam?: Maybe<UserOnTeam>;
 };
+
+
+export type QueryAllBoardsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<SortBoardBy>>;
+  where?: Maybe<WhereBoardInput>;
+};
+
+
+export type QueryAllTaskGroupsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<SortTaskGroupBy>>;
+  where?: Maybe<WhereTaskGroupInput>;
+};
+
+
+export type QueryAllTasksArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<SortTaskBy>>;
+  where?: Maybe<WhereTaskInput>;
+};
+
+
+export type QueryAllTeamsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<SortTeamBy>>;
+  where?: Maybe<WhereTeamInput>;
+};
+
+
+export type QueryAllUserOnTeamsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<SortUserOnTeamBy>>;
+  where?: Maybe<WhereUserOnTeamInput>;
+};
+
+
+export type QueryAllUsersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<SortUserBy>>;
+  where?: Maybe<WhereUserInput>;
+};
+
+
+export type QueryBoardArgs = {
+  where: WhereUniqueBoardInput;
+};
+
+
+export type QueryTaskArgs = {
+  where: WhereUniqueTaskInput;
+};
+
+
+export type QueryTaskGroupArgs = {
+  where: WhereUniqueTaskGroupInput;
+};
+
+
+export type QueryTeamArgs = {
+  where: WhereUniqueTeamInput;
+};
+
+
+export type QueryUserArgs = {
+  where: WhereUniqueUserInput;
+};
+
+
+export type QueryUserOnTeamArgs = {
+  where: WhereUniqueUserOnTeamInput;
+};
+
+export type RelateToManyBoardInput = {
+  connect?: Maybe<Array<Maybe<WhereUniqueBoardInput>>>;
+  create?: Maybe<Array<Maybe<CreateBoardInput>>>;
+  disconnect?: Maybe<Array<Maybe<WhereUniqueBoardInput>>>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToManyTaskGroupInput = {
+  connect?: Maybe<Array<Maybe<WhereUniqueTaskGroupInput>>>;
+  create?: Maybe<Array<Maybe<CreateTaskGroupInput>>>;
+  disconnect?: Maybe<Array<Maybe<WhereUniqueTaskGroupInput>>>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToManyTaskInput = {
+  connect?: Maybe<Array<Maybe<WhereUniqueTaskInput>>>;
+  create?: Maybe<Array<Maybe<CreateTaskInput>>>;
+  disconnect?: Maybe<Array<Maybe<WhereUniqueTaskInput>>>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToManyTeamInput = {
+  connect?: Maybe<Array<Maybe<WhereUniqueTeamInput>>>;
+  create?: Maybe<Array<Maybe<CreateTeamInput>>>;
+  disconnect?: Maybe<Array<Maybe<WhereUniqueTeamInput>>>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToManyUserInput = {
+  connect?: Maybe<Array<Maybe<WhereUniqueUserInput>>>;
+  create?: Maybe<Array<Maybe<CreateUserInput>>>;
+  disconnect?: Maybe<Array<Maybe<WhereUniqueUserInput>>>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToManyUserOnTeamInput = {
+  connect?: Maybe<Array<Maybe<WhereUniqueUserOnTeamInput>>>;
+  create?: Maybe<Array<Maybe<CreateUserOnTeamInput>>>;
+  disconnect?: Maybe<Array<Maybe<WhereUniqueUserOnTeamInput>>>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToOneBoardInput = {
+  connect?: Maybe<WhereUniqueBoardInput>;
+  create?: Maybe<CreateBoardInput>;
+  disconnect?: Maybe<WhereUniqueBoardInput>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToOneTaskGroupInput = {
+  connect?: Maybe<WhereUniqueTaskGroupInput>;
+  create?: Maybe<CreateTaskGroupInput>;
+  disconnect?: Maybe<WhereUniqueTaskGroupInput>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToOneTaskInput = {
+  connect?: Maybe<WhereUniqueTaskInput>;
+  create?: Maybe<CreateTaskInput>;
+  disconnect?: Maybe<WhereUniqueTaskInput>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToOneTeamInput = {
+  connect?: Maybe<WhereUniqueTeamInput>;
+  create?: Maybe<CreateTeamInput>;
+  disconnect?: Maybe<WhereUniqueTeamInput>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToOneUserInput = {
+  connect?: Maybe<WhereUniqueUserInput>;
+  create?: Maybe<CreateUserInput>;
+  disconnect?: Maybe<WhereUniqueUserInput>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export type RelateToOneUserOnTeamInput = {
+  connect?: Maybe<WhereUniqueUserOnTeamInput>;
+  create?: Maybe<CreateUserOnTeamInput>;
+  disconnect?: Maybe<WhereUniqueUserOnTeamInput>;
+  disconnectAll?: Maybe<Scalars['Boolean']>;
+};
+
+export enum SortBoardBy {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  OwnerAsc = 'owner_ASC',
+  OwnerDesc = 'owner_DESC',
+  TaskGroupsAsc = 'taskGroups_ASC',
+  TaskGroupsDesc = 'taskGroups_DESC',
+  TeamAsc = 'team_ASC',
+  TeamDesc = 'team_DESC'
+}
+
+export enum SortTaskBy {
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  TaskGroupAsc = 'taskGroup_ASC',
+  TaskGroupDesc = 'taskGroup_DESC'
+}
+
+export enum SortTaskGroupBy {
+  BoardAsc = 'board_ASC',
+  BoardDesc = 'board_DESC',
+  DescriptionAsc = 'description_ASC',
+  DescriptionDesc = 'description_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  TasksAsc = 'tasks_ASC',
+  TasksDesc = 'tasks_DESC'
+}
+
+export enum SortTeamBy {
+  BoardsAsc = 'boards_ASC',
+  BoardsDesc = 'boards_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  MembersAsc = 'members_ASC',
+  MembersDesc = 'members_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  PublicIdAsc = 'publicId_ASC',
+  PublicIdDesc = 'publicId_DESC'
+}
+
+export enum SortUserBy {
+  BoardsAsc = 'boards_ASC',
+  BoardsDesc = 'boards_DESC',
+  EmailAsc = 'email_ASC',
+  EmailDesc = 'email_DESC',
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC',
+  PasswordAsc = 'password_ASC',
+  PasswordDesc = 'password_DESC',
+  PublicIdAsc = 'publicId_ASC',
+  PublicIdDesc = 'publicId_DESC',
+  RegisteredAtAsc = 'registeredAt_ASC',
+  RegisteredAtDesc = 'registeredAt_DESC',
+  TeamsAsc = 'teams_ASC',
+  TeamsDesc = 'teams_DESC',
+  UpdatedAtAsc = 'updatedAt_ASC',
+  UpdatedAtDesc = 'updatedAt_DESC'
+}
+
+export enum SortUserOnTeamBy {
+  IdAsc = 'id_ASC',
+  IdDesc = 'id_DESC',
+  IsAdminAsc = 'isAdmin_ASC',
+  IsAdminDesc = 'isAdmin_DESC',
+  TeamAsc = 'team_ASC',
+  TeamDesc = 'team_DESC',
+  UserAsc = 'user_ASC',
+  UserDesc = 'user_DESC'
+}
 
 export type Task = {
   __typename?: 'Task';
@@ -305,48 +607,312 @@ export type TaskGroup = {
   description?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
+  tasks?: Maybe<Array<Maybe<Task>>>;
+};
+
+
+export type TaskGroupTasksArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<Maybe<SortTaskBy>>>;
+  where?: Maybe<WhereTaskInput>;
 };
 
 export type Team = {
   __typename?: 'Team';
+  boards?: Maybe<Array<Maybe<Board>>>;
   id: Scalars['Int'];
+  members?: Maybe<Array<Maybe<UserOnTeam>>>;
   name?: Maybe<Scalars['String']>;
-  publicId?: Maybe<Scalars['String']>;
+};
+
+
+export type TeamBoardsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<Maybe<SortBoardBy>>>;
+  where?: Maybe<WhereBoardInput>;
+};
+
+
+export type TeamMembersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<Maybe<SortUserOnTeamBy>>>;
+  where?: Maybe<WhereUserOnTeamInput>;
 };
 
 export type UpdateBoardInput = {
   description?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  owner?: Maybe<RelateToOneUserInput>;
+  taskGroups?: Maybe<RelateToManyTaskGroupInput>;
+  team?: Maybe<RelateToOneTeamInput>;
 };
 
 export type UpdateTaskGroupInput = {
+  board?: Maybe<RelateToOneBoardInput>;
   description?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  tasks?: Maybe<RelateToManyTaskInput>;
 };
 
 export type UpdateTaskInput = {
   description?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  taskGroup?: Maybe<RelateToOneTaskGroupInput>;
 };
 
 export type UpdateTeamInput = {
+  boards?: Maybe<RelateToManyBoardInput>;
+  members?: Maybe<RelateToManyUserOnTeamInput>;
   name?: Maybe<Scalars['String']>;
 };
 
 export type UpdateUserInput = {
+  boards?: Maybe<RelateToManyBoardInput>;
   name?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+  teams?: Maybe<RelateToManyUserOnTeamInput>;
+};
+
+export type UpdateUserOnTeamInput = {
+  isAdmin?: Maybe<Scalars['Boolean']>;
+  team?: Maybe<RelateToOneTeamInput>;
+  user?: Maybe<RelateToOneUserInput>;
 };
 
 export type User = {
   __typename?: 'User';
+  boards?: Maybe<Array<Maybe<Board>>>;
   email?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
   publicId?: Maybe<Scalars['String']>;
   registeredAt?: Maybe<Scalars['DateTime']>;
+  teams?: Maybe<UserOnTeam>;
   updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+
+export type UserBoardsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<Maybe<SortBoardBy>>>;
+  where?: Maybe<WhereBoardInput>;
+};
+
+export type UserOnTeam = {
+  __typename?: 'UserOnTeam';
+  id: Scalars['Int'];
+  isAdmin?: Maybe<Scalars['Boolean']>;
+  team?: Maybe<Team>;
+  user?: Maybe<User>;
+};
+
+export type WhereBoardInput = {
+  AND?: Maybe<Array<Maybe<WhereBoardInput>>>;
+  OR?: Maybe<Array<Maybe<WhereBoardInput>>>;
+  description_gt?: Maybe<Scalars['String']>;
+  description_gte?: Maybe<Scalars['String']>;
+  description_is?: Maybe<Scalars['String']>;
+  description_lt?: Maybe<Scalars['String']>;
+  description_lte?: Maybe<Scalars['String']>;
+  description_not?: Maybe<Scalars['String']>;
+  id_gt?: Maybe<Scalars['Int']>;
+  id_gte?: Maybe<Scalars['Int']>;
+  id_is?: Maybe<Scalars['Int']>;
+  id_lt?: Maybe<Scalars['Int']>;
+  id_lte?: Maybe<Scalars['Int']>;
+  id_not?: Maybe<Scalars['Int']>;
+  name_gt?: Maybe<Scalars['String']>;
+  name_gte?: Maybe<Scalars['String']>;
+  name_is?: Maybe<Scalars['String']>;
+  name_lt?: Maybe<Scalars['String']>;
+  name_lte?: Maybe<Scalars['String']>;
+  name_not?: Maybe<Scalars['String']>;
+  owner?: Maybe<WhereUserInput>;
+  owner_is_null?: Maybe<Scalars['Boolean']>;
+  taskGroups?: Maybe<WhereTaskGroupInput>;
+  taskGroups_is_null?: Maybe<Scalars['Boolean']>;
+  team?: Maybe<WhereTeamInput>;
+  team_is_null?: Maybe<Scalars['Boolean']>;
+};
+
+export type WhereTaskGroupInput = {
+  AND?: Maybe<Array<Maybe<WhereTaskGroupInput>>>;
+  OR?: Maybe<Array<Maybe<WhereTaskGroupInput>>>;
+  board?: Maybe<WhereBoardInput>;
+  board_is_null?: Maybe<Scalars['Boolean']>;
+  description_gt?: Maybe<Scalars['String']>;
+  description_gte?: Maybe<Scalars['String']>;
+  description_is?: Maybe<Scalars['String']>;
+  description_lt?: Maybe<Scalars['String']>;
+  description_lte?: Maybe<Scalars['String']>;
+  description_not?: Maybe<Scalars['String']>;
+  id_gt?: Maybe<Scalars['Int']>;
+  id_gte?: Maybe<Scalars['Int']>;
+  id_is?: Maybe<Scalars['Int']>;
+  id_lt?: Maybe<Scalars['Int']>;
+  id_lte?: Maybe<Scalars['Int']>;
+  id_not?: Maybe<Scalars['Int']>;
+  name_gt?: Maybe<Scalars['String']>;
+  name_gte?: Maybe<Scalars['String']>;
+  name_is?: Maybe<Scalars['String']>;
+  name_lt?: Maybe<Scalars['String']>;
+  name_lte?: Maybe<Scalars['String']>;
+  name_not?: Maybe<Scalars['String']>;
+  tasks?: Maybe<WhereTaskInput>;
+  tasks_is_null?: Maybe<Scalars['Boolean']>;
+};
+
+export type WhereTaskInput = {
+  AND?: Maybe<Array<Maybe<WhereTaskInput>>>;
+  OR?: Maybe<Array<Maybe<WhereTaskInput>>>;
+  description_gt?: Maybe<Scalars['String']>;
+  description_gte?: Maybe<Scalars['String']>;
+  description_is?: Maybe<Scalars['String']>;
+  description_lt?: Maybe<Scalars['String']>;
+  description_lte?: Maybe<Scalars['String']>;
+  description_not?: Maybe<Scalars['String']>;
+  id_gt?: Maybe<Scalars['Int']>;
+  id_gte?: Maybe<Scalars['Int']>;
+  id_is?: Maybe<Scalars['Int']>;
+  id_lt?: Maybe<Scalars['Int']>;
+  id_lte?: Maybe<Scalars['Int']>;
+  id_not?: Maybe<Scalars['Int']>;
+  name_gt?: Maybe<Scalars['String']>;
+  name_gte?: Maybe<Scalars['String']>;
+  name_is?: Maybe<Scalars['String']>;
+  name_lt?: Maybe<Scalars['String']>;
+  name_lte?: Maybe<Scalars['String']>;
+  name_not?: Maybe<Scalars['String']>;
+  taskGroup?: Maybe<WhereTaskGroupInput>;
+  taskGroup_is_null?: Maybe<Scalars['Boolean']>;
+};
+
+export type WhereTeamInput = {
+  AND?: Maybe<Array<Maybe<WhereTeamInput>>>;
+  OR?: Maybe<Array<Maybe<WhereTeamInput>>>;
+  boards?: Maybe<WhereBoardInput>;
+  boards_is_null?: Maybe<Scalars['Boolean']>;
+  id_gt?: Maybe<Scalars['Int']>;
+  id_gte?: Maybe<Scalars['Int']>;
+  id_is?: Maybe<Scalars['Int']>;
+  id_lt?: Maybe<Scalars['Int']>;
+  id_lte?: Maybe<Scalars['Int']>;
+  id_not?: Maybe<Scalars['Int']>;
+  members?: Maybe<WhereUserOnTeamInput>;
+  members_is_null?: Maybe<Scalars['Boolean']>;
+  name_gt?: Maybe<Scalars['String']>;
+  name_gte?: Maybe<Scalars['String']>;
+  name_is?: Maybe<Scalars['String']>;
+  name_lt?: Maybe<Scalars['String']>;
+  name_lte?: Maybe<Scalars['String']>;
+  name_not?: Maybe<Scalars['String']>;
+  publicId_gt?: Maybe<Scalars['String']>;
+  publicId_gte?: Maybe<Scalars['String']>;
+  publicId_is?: Maybe<Scalars['String']>;
+  publicId_lt?: Maybe<Scalars['String']>;
+  publicId_lte?: Maybe<Scalars['String']>;
+  publicId_not?: Maybe<Scalars['String']>;
+};
+
+export type WhereUniqueBoardInput = {
+  id: Scalars['Int'];
+};
+
+export type WhereUniqueTaskGroupInput = {
+  id: Scalars['Int'];
+};
+
+export type WhereUniqueTaskInput = {
+  id: Scalars['Int'];
+};
+
+export type WhereUniqueTeamInput = {
+  id: Scalars['Int'];
+};
+
+export type WhereUniqueUserInput = {
+  id: Scalars['Int'];
+};
+
+export type WhereUniqueUserOnTeamInput = {
+  id: Scalars['Int'];
+};
+
+export type WhereUserInput = {
+  AND?: Maybe<Array<Maybe<WhereUserInput>>>;
+  OR?: Maybe<Array<Maybe<WhereUserInput>>>;
+  boards?: Maybe<WhereBoardInput>;
+  boards_is_null?: Maybe<Scalars['Boolean']>;
+  email_gt?: Maybe<Scalars['String']>;
+  email_gte?: Maybe<Scalars['String']>;
+  email_is?: Maybe<Scalars['String']>;
+  email_lt?: Maybe<Scalars['String']>;
+  email_lte?: Maybe<Scalars['String']>;
+  email_not?: Maybe<Scalars['String']>;
+  id_gt?: Maybe<Scalars['Int']>;
+  id_gte?: Maybe<Scalars['Int']>;
+  id_is?: Maybe<Scalars['Int']>;
+  id_lt?: Maybe<Scalars['Int']>;
+  id_lte?: Maybe<Scalars['Int']>;
+  id_not?: Maybe<Scalars['Int']>;
+  name_gt?: Maybe<Scalars['String']>;
+  name_gte?: Maybe<Scalars['String']>;
+  name_is?: Maybe<Scalars['String']>;
+  name_lt?: Maybe<Scalars['String']>;
+  name_lte?: Maybe<Scalars['String']>;
+  name_not?: Maybe<Scalars['String']>;
+  password_gt?: Maybe<Scalars['String']>;
+  password_gte?: Maybe<Scalars['String']>;
+  password_is?: Maybe<Scalars['String']>;
+  password_lt?: Maybe<Scalars['String']>;
+  password_lte?: Maybe<Scalars['String']>;
+  password_not?: Maybe<Scalars['String']>;
+  publicId_gt?: Maybe<Scalars['String']>;
+  publicId_gte?: Maybe<Scalars['String']>;
+  publicId_is?: Maybe<Scalars['String']>;
+  publicId_lt?: Maybe<Scalars['String']>;
+  publicId_lte?: Maybe<Scalars['String']>;
+  publicId_not?: Maybe<Scalars['String']>;
+  registeredAt_gt?: Maybe<Scalars['DateTime']>;
+  registeredAt_gte?: Maybe<Scalars['DateTime']>;
+  registeredAt_is?: Maybe<Scalars['DateTime']>;
+  registeredAt_lt?: Maybe<Scalars['DateTime']>;
+  registeredAt_lte?: Maybe<Scalars['DateTime']>;
+  registeredAt_not?: Maybe<Scalars['DateTime']>;
+  teams?: Maybe<WhereUserOnTeamInput>;
+  teams_is_null?: Maybe<Scalars['Boolean']>;
+  updatedAt_gt?: Maybe<Scalars['DateTime']>;
+  updatedAt_gte?: Maybe<Scalars['DateTime']>;
+  updatedAt_is?: Maybe<Scalars['DateTime']>;
+  updatedAt_lt?: Maybe<Scalars['DateTime']>;
+  updatedAt_lte?: Maybe<Scalars['DateTime']>;
+  updatedAt_not?: Maybe<Scalars['DateTime']>;
+};
+
+export type WhereUserOnTeamInput = {
+  AND?: Maybe<Array<Maybe<WhereUserOnTeamInput>>>;
+  OR?: Maybe<Array<Maybe<WhereUserOnTeamInput>>>;
+  id_gt?: Maybe<Scalars['Int']>;
+  id_gte?: Maybe<Scalars['Int']>;
+  id_is?: Maybe<Scalars['Int']>;
+  id_lt?: Maybe<Scalars['Int']>;
+  id_lte?: Maybe<Scalars['Int']>;
+  id_not?: Maybe<Scalars['Int']>;
+  isAdmin_gt?: Maybe<Scalars['Boolean']>;
+  isAdmin_gte?: Maybe<Scalars['Boolean']>;
+  isAdmin_is?: Maybe<Scalars['Boolean']>;
+  isAdmin_lt?: Maybe<Scalars['Boolean']>;
+  isAdmin_lte?: Maybe<Scalars['Boolean']>;
+  isAdmin_not?: Maybe<Scalars['Boolean']>;
+  team?: Maybe<WhereTeamInput>;
+  team_is_null?: Maybe<Scalars['Boolean']>;
+  user?: Maybe<WhereUserInput>;
+  user_is_null?: Maybe<Scalars['Boolean']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -428,6 +994,7 @@ export type ResolversTypes = ResolversObject<{
   CreateTaskInput: CreateTaskInput;
   CreateTeamInput: CreateTeamInput;
   CreateUserInput: CreateUserInput;
+  CreateUserOnTeamInput: CreateUserOnTeamInput;
   Currency: ResolverTypeWrapper<Scalars['Currency']>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
@@ -471,7 +1038,25 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   RGB: ResolverTypeWrapper<Scalars['RGB']>;
   RGBA: ResolverTypeWrapper<Scalars['RGBA']>;
+  RelateToManyBoardInput: RelateToManyBoardInput;
+  RelateToManyTaskGroupInput: RelateToManyTaskGroupInput;
+  RelateToManyTaskInput: RelateToManyTaskInput;
+  RelateToManyTeamInput: RelateToManyTeamInput;
+  RelateToManyUserInput: RelateToManyUserInput;
+  RelateToManyUserOnTeamInput: RelateToManyUserOnTeamInput;
+  RelateToOneBoardInput: RelateToOneBoardInput;
+  RelateToOneTaskGroupInput: RelateToOneTaskGroupInput;
+  RelateToOneTaskInput: RelateToOneTaskInput;
+  RelateToOneTeamInput: RelateToOneTeamInput;
+  RelateToOneUserInput: RelateToOneUserInput;
+  RelateToOneUserOnTeamInput: RelateToOneUserOnTeamInput;
   SafeInt: ResolverTypeWrapper<Scalars['SafeInt']>;
+  SortBoardBy: SortBoardBy;
+  SortTaskBy: SortTaskBy;
+  SortTaskGroupBy: SortTaskGroupBy;
+  SortTeamBy: SortTeamBy;
+  SortUserBy: SortUserBy;
+  SortUserOnTeamBy: SortUserOnTeamBy;
   String: ResolverTypeWrapper<Scalars['String']>;
   Task: ResolverTypeWrapper<Task>;
   TaskGroup: ResolverTypeWrapper<TaskGroup>;
@@ -488,9 +1073,23 @@ export type ResolversTypes = ResolversObject<{
   UpdateTaskInput: UpdateTaskInput;
   UpdateTeamInput: UpdateTeamInput;
   UpdateUserInput: UpdateUserInput;
+  UpdateUserOnTeamInput: UpdateUserOnTeamInput;
   User: ResolverTypeWrapper<User>;
+  UserOnTeam: ResolverTypeWrapper<UserOnTeam>;
   UtcOffset: ResolverTypeWrapper<Scalars['UtcOffset']>;
   Void: ResolverTypeWrapper<Scalars['Void']>;
+  WhereBoardInput: WhereBoardInput;
+  WhereTaskGroupInput: WhereTaskGroupInput;
+  WhereTaskInput: WhereTaskInput;
+  WhereTeamInput: WhereTeamInput;
+  WhereUniqueBoardInput: WhereUniqueBoardInput;
+  WhereUniqueTaskGroupInput: WhereUniqueTaskGroupInput;
+  WhereUniqueTaskInput: WhereUniqueTaskInput;
+  WhereUniqueTeamInput: WhereUniqueTeamInput;
+  WhereUniqueUserInput: WhereUniqueUserInput;
+  WhereUniqueUserOnTeamInput: WhereUniqueUserOnTeamInput;
+  WhereUserInput: WhereUserInput;
+  WhereUserOnTeamInput: WhereUserOnTeamInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -504,6 +1103,7 @@ export type ResolversParentTypes = ResolversObject<{
   CreateTaskInput: CreateTaskInput;
   CreateTeamInput: CreateTeamInput;
   CreateUserInput: CreateUserInput;
+  CreateUserOnTeamInput: CreateUserOnTeamInput;
   Currency: Scalars['Currency'];
   Date: Scalars['Date'];
   DateTime: Scalars['DateTime'];
@@ -547,6 +1147,18 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   RGB: Scalars['RGB'];
   RGBA: Scalars['RGBA'];
+  RelateToManyBoardInput: RelateToManyBoardInput;
+  RelateToManyTaskGroupInput: RelateToManyTaskGroupInput;
+  RelateToManyTaskInput: RelateToManyTaskInput;
+  RelateToManyTeamInput: RelateToManyTeamInput;
+  RelateToManyUserInput: RelateToManyUserInput;
+  RelateToManyUserOnTeamInput: RelateToManyUserOnTeamInput;
+  RelateToOneBoardInput: RelateToOneBoardInput;
+  RelateToOneTaskGroupInput: RelateToOneTaskGroupInput;
+  RelateToOneTaskInput: RelateToOneTaskInput;
+  RelateToOneTeamInput: RelateToOneTeamInput;
+  RelateToOneUserInput: RelateToOneUserInput;
+  RelateToOneUserOnTeamInput: RelateToOneUserOnTeamInput;
   SafeInt: Scalars['SafeInt'];
   String: Scalars['String'];
   Task: Task;
@@ -564,9 +1176,23 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateTaskInput: UpdateTaskInput;
   UpdateTeamInput: UpdateTeamInput;
   UpdateUserInput: UpdateUserInput;
+  UpdateUserOnTeamInput: UpdateUserOnTeamInput;
   User: User;
+  UserOnTeam: UserOnTeam;
   UtcOffset: Scalars['UtcOffset'];
   Void: Scalars['Void'];
+  WhereBoardInput: WhereBoardInput;
+  WhereTaskGroupInput: WhereTaskGroupInput;
+  WhereTaskInput: WhereTaskInput;
+  WhereTeamInput: WhereTeamInput;
+  WhereUniqueBoardInput: WhereUniqueBoardInput;
+  WhereUniqueTaskGroupInput: WhereUniqueTaskGroupInput;
+  WhereUniqueTaskInput: WhereUniqueTaskInput;
+  WhereUniqueTeamInput: WhereUniqueTeamInput;
+  WhereUniqueUserInput: WhereUniqueUserInput;
+  WhereUniqueUserOnTeamInput: WhereUniqueUserOnTeamInput;
+  WhereUserInput: WhereUserInput;
+  WhereUserOnTeamInput: WhereUserOnTeamInput;
 }>;
 
 export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
@@ -578,6 +1204,7 @@ export type BoardResolvers<ContextType = Context, ParentType extends ResolversPa
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   owner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  taskGroups?: Resolver<Maybe<Array<Maybe<ResolversTypes['TaskGroup']>>>, ParentType, ContextType, RequireFields<BoardTaskGroupsArgs, never>>;
   team?: Resolver<Maybe<ResolversTypes['Team']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -692,17 +1319,20 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   createTaskGroup?: Resolver<ResolversTypes['TaskGroup'], ParentType, ContextType, RequireFields<MutationCreateTaskGroupArgs, 'data'>>;
   createTeam?: Resolver<ResolversTypes['Team'], ParentType, ContextType, RequireFields<MutationCreateTeamArgs, 'data'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'data'>>;
+  createUserOnTeam?: Resolver<ResolversTypes['UserOnTeam'], ParentType, ContextType, RequireFields<MutationCreateUserOnTeamArgs, 'data'>>;
   deleteBoard?: Resolver<Maybe<ResolversTypes['Board']>, ParentType, ContextType, RequireFields<MutationDeleteBoardArgs, 'id'>>;
   deleteTask?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'id'>>;
   deleteTaskGroup?: Resolver<Maybe<ResolversTypes['TaskGroup']>, ParentType, ContextType, RequireFields<MutationDeleteTaskGroupArgs, 'id'>>;
   deleteTeam?: Resolver<Maybe<ResolversTypes['Team']>, ParentType, ContextType, RequireFields<MutationDeleteTeamArgs, 'id'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  deleteUserOnTeam?: Resolver<Maybe<ResolversTypes['UserOnTeam']>, ParentType, ContextType, RequireFields<MutationDeleteUserOnTeamArgs, 'id'>>;
   root?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updateBoard?: Resolver<ResolversTypes['Board'], ParentType, ContextType, RequireFields<MutationUpdateBoardArgs, 'data' | 'id'>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'data' | 'id'>>;
   updateTaskGroup?: Resolver<ResolversTypes['TaskGroup'], ParentType, ContextType, RequireFields<MutationUpdateTaskGroupArgs, 'data' | 'id'>>;
   updateTeam?: Resolver<ResolversTypes['Team'], ParentType, ContextType, RequireFields<MutationUpdateTeamArgs, 'data' | 'id'>>;
   updateUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'data' | 'id'>>;
+  updateUserOnTeam?: Resolver<ResolversTypes['UserOnTeam'], ParentType, ContextType, RequireFields<MutationUpdateUserOnTeamArgs, 'data' | 'id'>>;
 }>;
 
 export interface NegativeFloatScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['NegativeFloat'], any> {
@@ -758,7 +1388,19 @@ export interface PostalCodeScalarConfig extends GraphQLScalarTypeConfig<Resolver
 }
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  allBoards?: Resolver<Maybe<Array<Maybe<ResolversTypes['Board']>>>, ParentType, ContextType, RequireFields<QueryAllBoardsArgs, never>>;
+  allTaskGroups?: Resolver<Maybe<Array<Maybe<ResolversTypes['TaskGroup']>>>, ParentType, ContextType, RequireFields<QueryAllTaskGroupsArgs, never>>;
+  allTasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType, RequireFields<QueryAllTasksArgs, never>>;
+  allTeams?: Resolver<Maybe<Array<Maybe<ResolversTypes['Team']>>>, ParentType, ContextType, RequireFields<QueryAllTeamsArgs, never>>;
+  allUserOnTeams?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserOnTeam']>>>, ParentType, ContextType, RequireFields<QueryAllUserOnTeamsArgs, never>>;
+  allUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType, RequireFields<QueryAllUsersArgs, never>>;
+  board?: Resolver<Maybe<ResolversTypes['Board']>, ParentType, ContextType, RequireFields<QueryBoardArgs, 'where'>>;
   root?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTaskArgs, 'where'>>;
+  taskGroup?: Resolver<Maybe<ResolversTypes['TaskGroup']>, ParentType, ContextType, RequireFields<QueryTaskGroupArgs, 'where'>>;
+  team?: Resolver<Maybe<ResolversTypes['Team']>, ParentType, ContextType, RequireFields<QueryTeamArgs, 'where'>>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'where'>>;
+  userOnTeam?: Resolver<Maybe<ResolversTypes['UserOnTeam']>, ParentType, ContextType, RequireFields<QueryUserOnTeamArgs, 'where'>>;
 }>;
 
 export interface RgbScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RGB'], any> {
@@ -786,13 +1428,15 @@ export type TaskGroupResolvers<ContextType = Context, ParentType extends Resolve
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType, RequireFields<TaskGroupTasksArgs, never>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type TeamResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Team'] = ResolversParentTypes['Team']> = ResolversObject<{
+  boards?: Resolver<Maybe<Array<Maybe<ResolversTypes['Board']>>>, ParentType, ContextType, RequireFields<TeamBoardsArgs, never>>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  members?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserOnTeam']>>>, ParentType, ContextType, RequireFields<TeamMembersArgs, never>>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  publicId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -825,13 +1469,23 @@ export interface UnsignedIntScalarConfig extends GraphQLScalarTypeConfig<Resolve
 }
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
+  boards?: Resolver<Maybe<Array<Maybe<ResolversTypes['Board']>>>, ParentType, ContextType, RequireFields<UserBoardsArgs, never>>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   publicId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   registeredAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  teams?: Resolver<Maybe<ResolversTypes['UserOnTeam']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type UserOnTeamResolvers<ContextType = Context, ParentType extends ResolversParentTypes['UserOnTeam'] = ResolversParentTypes['UserOnTeam']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  isAdmin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  team?: Resolver<Maybe<ResolversTypes['Team']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -901,6 +1555,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   UnsignedFloat?: GraphQLScalarType;
   UnsignedInt?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
+  UserOnTeam?: UserOnTeamResolvers<ContextType>;
   UtcOffset?: GraphQLScalarType;
   Void?: GraphQLScalarType;
 }>;

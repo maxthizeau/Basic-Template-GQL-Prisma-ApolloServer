@@ -3,10 +3,8 @@ import { gql } from "apollo-server-express"
 const team = gql`
   type Team {
     id: Int!
-    publicId: String
     name: String
-    members(where: WhereUserInput, sortBy: [SortUserBy], first: Int, skip: Int): [User]
-    admins(where: WhereUserInput, sortBy: [SortUserBy], first: Int, skip: Int): [User]
+    members(where: WhereUserOnTeamInput, sortBy: [SortUserOnTeamBy], first: Int, skip: Int): [UserOnTeam]
     boards(where: WhereBoardInput, sortBy: [SortBoardBy], first: Int, skip: Int): [Board]
   }
 `
@@ -14,14 +12,12 @@ const team = gql`
 const teamTypesDefs = gql`
   input CreateTeamInput {
     name: String!
-    members: RelateToManyUserInput
-    admins: RelateToManyUserInput
+    members: RelateToManyUserOnTeamInput
     boards: RelateToManyBoardInput
   }
   input UpdateTeamInput {
     name: String
-    members: RelateToManyUserInput
-    admins: RelateToManyUserInput
+    members: RelateToManyUserOnTeamInput
     boards: RelateToManyBoardInput
   }
 

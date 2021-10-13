@@ -10,6 +10,7 @@ import { task } from "./typedefs/task"
 import { taskGroup } from "./typedefs/taskGroup"
 import { board } from "./typedefs/board"
 import { team } from "./typedefs/team"
+import { userOnTeam } from "./typedefs/userOnTeam"
 
 // Create an array of type to generate
 const typeToGenerate: TypeToGenerate[] = [
@@ -18,6 +19,7 @@ const typeToGenerate: TypeToGenerate[] = [
   { name: "TaskGroup", typeDef: taskGroup },
   { name: "Board", typeDef: board },
   { name: "Team", typeDef: team },
+  { name: "UserOnTeam", typeDef: userOnTeam },
 ]
 
 // The type you dont need to relate to a WhereInput

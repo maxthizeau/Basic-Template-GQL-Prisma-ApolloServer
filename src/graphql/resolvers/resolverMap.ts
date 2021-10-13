@@ -12,18 +12,22 @@ import boardMutations from "./board/boardMutations"
 import taskMutations from "./task/taskMutations"
 import taskGroupMutations from "./taskGroup/taskGroupMutations"
 import teamMutations from "./team/teamMutations"
+import userOnTeamQueries from "./userOnTeam/userOnTeamQueries"
+import userOnTeamMutations from "./userOnTeam/userOnTeamMutations"
 
 const resolverMap = [
-  // userQueries,
-  // userMutations,
-  // boardQueries,
-  // boardMutations,
-  // taskQueries,
-  // taskMutations,
-  // taskGroupQueries,
-  // taskGroupMutations,
-  // teamQueries,
-  // teamMutations,
+  userQueries,
+  userMutations,
+  boardQueries,
+  boardMutations,
+  taskQueries,
+  taskMutations,
+  taskGroupQueries,
+  taskGroupMutations,
+  teamQueries,
+  teamMutations,
+  userOnTeamQueries,
+  userOnTeamMutations,
 ]
 
 // const resolverMap: IResolvers = {}

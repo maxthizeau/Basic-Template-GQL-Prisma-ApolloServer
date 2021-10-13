@@ -22,6 +22,13 @@ const userQueries: IResolvers = {
       const result = await context.prisma.board.findMany(argsRequest)
       return result
     },
+    teams: async (_parent, args, context: Context) => {
+      console.log("teamsMember requested")
+      const argsRequest = getWhereSortByFirstSkipRequest(args)
+      // argsRequest.where = { ...argsRequest.where, members: { has: _parent.id } }
+      const result = await context.prisma.team.findMany(argsRequest)
+      return result
+    },
   },
 }
 export default userQueries

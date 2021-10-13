@@ -20,6 +20,7 @@ const userMutations: IResolvers = {
       const user = { ...data, name: removeSpecialChar(data.name) }
       let publicId = generatePublicId(user.name)
       user.publicId = publicId
+      console.log(user)
       // TO DO : Verify unique publicId
 
       return await context.prisma.user.create({ data: user })

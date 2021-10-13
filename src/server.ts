@@ -7,7 +7,7 @@ import { performAstCodegen } from "./codegen"
 import { generateAllInputs } from "./graphql/generateInputs"
 
 async function startApolloServer() {
-  generateAllInputs()
+  // generateAllInputs()
   performAstCodegen()
   const app = express()
   const httpServer = createServer(app)

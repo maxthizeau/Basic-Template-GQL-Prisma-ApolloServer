@@ -9,11 +9,27 @@ const boardQueries: IResolvers = {
     allBoards: async (_parent, args, context: Context) => {
       // Generate all the args (where, first, skip, sortBy)
       const queryArgs = getWhereSortByFirstSkipRequest(args)
-      queryArgs.include = { taskGroups: true }
-      queryArgs.include = { team: true }
-      queryArgs.include = { owner: true }
+      //   taskGroups(where: WhereTaskGroupInput, sortBy: [SortTaskGroupBy], first: Int, skip: Int): [TaskGroup]
+      // team: Team
+      // owner: User
 
       const result = await context.prisma.board.findMany(queryArgs)
+      return result
+    },
+  },
+  Board: {
+    team: async (_parent, args, context: Context) => {
+      const result = await context.prisma.team.findUnique({ where: { id: _parent.teamId } })
+      return result
+    },
+    owner: async (_parent, args, context: Context) => {
+      const result = await context.prisma.user.findUnique({ where: { id: _parent.ownerId } })
+      return result
+    },
+    taskGroups: async (_parent, args, context: Context) => {
+      const argsRequest = getWhereSortByFirstSkipRequest(args)
+      argsRequest.where = { ...argsRequest.where, boardId: _parent.id }
+      const result = await context.prisma.taskGroup.findMany(argsRequest)
       return result
     },
   },

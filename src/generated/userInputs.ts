@@ -48,10 +48,8 @@ export const userInputs = gql`
     updatedAt_lte: DateTime
     updatedAt_gt: DateTime
     updatedAt_gte: DateTime
-    teamsMember: WhereTeamInput
-    teamsMember_is_null: Boolean
-    teamsAdmin: WhereTeamInput
-    teamsAdmin_is_null: Boolean
+    teams: WhereUserOnTeamInput
+    teams_is_null: Boolean
     boards: WhereBoardInput
     boards_is_null: Boolean
   }
@@ -75,10 +73,8 @@ export const userInputs = gql`
     registeredAt_DESC
     updatedAt_ASC
     updatedAt_DESC
-    teamsMember_ASC
-    teamsMember_DESC
-    teamsAdmin_ASC
-    teamsAdmin_DESC
+    teams_ASC
+    teams_DESC
     boards_ASC
     boards_DESC
   }
