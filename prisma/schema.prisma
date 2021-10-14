@@ -15,6 +15,7 @@ model User {
   updatedAt    DateTime      @updatedAt
   email        String        @unique
   password     String
+  role         Role          @default(USER)
   boards       Board[]
   teams        UsersOnTeam[]
 }
@@ -61,4 +62,9 @@ model Board {
   owner       User        @relation(fields: [ownerId], references: [id])
   team        Team?       @relation(fields: [teamId], references: [id])
   taskGroups  TaskGroup[]
+}
+
+enum Role {
+  USER
+  ADMIN
 }

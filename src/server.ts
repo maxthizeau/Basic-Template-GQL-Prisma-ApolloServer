@@ -5,6 +5,9 @@ import { schema } from "./graphql/schema"
 import { context } from "@src/graphql/prismaContext"
 import { performAstCodegen } from "./codegen"
 import { generateAllInputs } from "./graphql/generateInputs"
+import dotenv from "dotenv"
+
+require("dotenv").config
 
 async function startApolloServer() {
   // generateAllInputs()

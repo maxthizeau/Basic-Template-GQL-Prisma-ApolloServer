@@ -260,23 +260,9 @@ scalar ObjectID
 """Represents NULL values"""
 scalar Void
 
-type Query {
-  root: String!
-  user(where: WhereUniqueUserInput!): User
-  allUsers(where: WhereUserInput, sortBy: [SortUserBy!], first: Int, skip: Int): [User]
-  board(where: WhereUniqueBoardInput!): Board
-  allBoards(where: WhereBoardInput, sortBy: [SortBoardBy!], first: Int, skip: Int): [Board]
-  task(where: WhereUniqueTaskInput!): Task
-  allTasks(where: WhereTaskInput, sortBy: [SortTaskBy!], first: Int, skip: Int): [Task]
-  taskGroup(where: WhereUniqueTaskGroupInput!): TaskGroup
-  allTaskGroups(where: WhereTaskGroupInput, sortBy: [SortTaskGroupBy!], first: Int, skip: Int): [TaskGroup]
-  team(where: WhereUniqueTeamInput!): Team
-  allTeams(where: WhereTeamInput, sortBy: [SortTeamBy!], first: Int, skip: Int): [Team]
-  userOnTeam(where: WhereUniqueUserOnTeamInput!): UserOnTeam
-  allUserOnTeams(where: WhereUserOnTeamInput, sortBy: [SortUserOnTeamBy!], first: Int, skip: Int): [UserOnTeam]
-}
-
 type Mutation {
+  signup(email: String!, password: String!, name: String!): AuthPayload
+  login(email: String!, password: String!): AuthPayload
   root: String!
   createUser(data: CreateUserInput!): User!
   updateUser(id: Int!, data: UpdateUserInput!): User!
@@ -296,6 +282,27 @@ type Mutation {
   createUserOnTeam(data: CreateUserOnTeamInput!): UserOnTeam!
   updateUserOnTeam(id: Int!, data: UpdateUserOnTeamInput!): UserOnTeam!
   deleteUserOnTeam(id: Int!): UserOnTeam
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type Query {
+  root: String!
+  user(where: WhereUniqueUserInput!): User
+  allUsers(where: WhereUserInput, sortBy: [SortUserBy!], first: Int, skip: Int): [User]
+  board(where: WhereUniqueBoardInput!): Board
+  allBoards(where: WhereBoardInput, sortBy: [SortBoardBy!], first: Int, skip: Int): [Board]
+  task(where: WhereUniqueTaskInput!): Task
+  allTasks(where: WhereTaskInput, sortBy: [SortTaskBy!], first: Int, skip: Int): [Task]
+  taskGroup(where: WhereUniqueTaskGroupInput!): TaskGroup
+  allTaskGroups(where: WhereTaskGroupInput, sortBy: [SortTaskGroupBy!], first: Int, skip: Int): [TaskGroup]
+  team(where: WhereUniqueTeamInput!): Team
+  allTeams(where: WhereTeamInput, sortBy: [SortTeamBy!], first: Int, skip: Int): [Team]
+  userOnTeam(where: WhereUniqueUserOnTeamInput!): UserOnTeam
+  allUserOnTeams(where: WhereUserOnTeamInput, sortBy: [SortUserOnTeamBy!], first: Int, skip: Int): [UserOnTeam]
 }
 
 type User {

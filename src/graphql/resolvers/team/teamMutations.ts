@@ -5,7 +5,9 @@ import { getRandomIntString } from "@src/utils/numberFunctions"
 const teamMutations: IResolvers = {
   Mutation: {
     createTeam: async (_root, args, context: Context) => {
-      const { data } = args
+      console.log(context)
+      let data = args.data
+
       return await context.prisma.team.create({ data })
     },
     updateTeam: async (_root, args, context: Context) => {

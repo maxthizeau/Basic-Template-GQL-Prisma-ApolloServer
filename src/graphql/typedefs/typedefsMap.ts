@@ -11,6 +11,7 @@ import { taskGroupInputs } from "@src/generated/taskGroupInputs"
 import { teamInputs } from "@src/generated/teamInputs"
 import { userOnTeam, userOnTeamTypesDefs } from "./userOnTeam"
 import { userOnTeamInputs } from "../../generated/userOnTeamInputs"
+import appTypeDefs from "./appTypeDefs"
 
 const rootTypeDefs = gql`
   type Query {
@@ -22,6 +23,7 @@ const rootTypeDefs = gql`
 `
 
 const typeDefs = [
+  appTypeDefs,
   rootTypeDefs,
   user,
   userTypesDefs,

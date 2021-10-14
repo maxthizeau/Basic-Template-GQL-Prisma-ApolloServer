@@ -14,8 +14,10 @@ import taskGroupMutations from "./taskGroup/taskGroupMutations"
 import teamMutations from "./team/teamMutations"
 import userOnTeamQueries from "./userOnTeam/userOnTeamQueries"
 import userOnTeamMutations from "./userOnTeam/userOnTeamMutations"
+import appMutations from "./appMutations"
 
 const resolverMap = [
+  appMutations,
   userQueries,
   userMutations,
   boardQueries,

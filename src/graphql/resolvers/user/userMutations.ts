@@ -5,7 +5,7 @@ import { getRandomIntString } from "@src/utils/numberFunctions"
 import { removeSpecialChar } from "../../../utils/stringFunctions"
 import { Prisma } from ".prisma/client"
 
-function generatePublicId(name: string): string {
+export function generatePublicId(name: string): string {
   return `${name}#${getRandomIntString(5)}`
 }
 
