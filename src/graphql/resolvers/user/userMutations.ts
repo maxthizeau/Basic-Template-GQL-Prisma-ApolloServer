@@ -4,6 +4,7 @@ import { board } from "@src/graphql/typedefs/board"
 import { getRandomIntString } from "@src/utils/numberFunctions"
 import { removeSpecialChar } from "../../../utils/stringFunctions"
 import { Prisma } from ".prisma/client"
+import { rules } from "../../accessRules"
 
 export function generatePublicId(name: string): string {
   return `${name}#${getRandomIntString(5)}`
@@ -12,6 +13,12 @@ export function generatePublicId(name: string): string {
 const userMutations: IResolvers = {
   Mutation: {
     createUser: async (_root, args, context: Context) => {
+      // Access : only admin should access this mutation. Users should use signup mutation
+      const access: any = rules.isAdmin(context)
+      if (!access) {
+        throw new Error("You don't have permission to access this resource")
+      }
+
       const { data } = args
       const emailAlreadyExists = await context.prisma.user.findFirst({ where: { email: data.email } })
 
@@ -26,11 +33,21 @@ const userMutations: IResolvers = {
       return await context.prisma.user.create({ data: user })
     },
     updateUser: async (_root, args, context: Context) => {
-      let { connect, create, disconnect } = args.data.boards
-      // console.log(finalData)
+      // Access : a user should only update himself
+      const access: any = rules.canUpdateUser(context, args.id)
+      if (!access) {
+        throw new Error("You don't have permission to access this resource")
+      }
+
       return await context.prisma.user.update({ where: { id: Number(args.id) }, data: { ...args.data } })
     },
     deleteUser: async (_root, args, context: Context) => {
+      // Access : only admin can delete users, user cannot delete his account himself
+      const access: any = rules.isAdmin(context)
+      if (!access) {
+        throw new Error("You don't have permission to access this resource")
+      }
+
       return await context.prisma.user.delete({ where: { id: Number(args.id) } })
     },
   },

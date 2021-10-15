@@ -1,15 +1,16 @@
 import { IResolvers } from "@graphql-tools/utils/Interfaces"
 import { Context } from "../prismaContext"
 import { generatePublicId } from "./user/userMutations"
+import { removeSpecialChar } from "../../utils/stringFunctions"
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { APP_SECRET, getUserId } = require("@src/utils/utils")
 
 async function signup(parent, args, context, info) {
-  const publicId = generatePublicId(args.name)
+  const publicId = removeSpecialChar(generatePublicId(args.name))
   // 1
   const password = await bcrypt.hash(args.password, 10)
-  const data = { ...args, publicId: publicId, password }
+  const data = { ...args, name: removeSpecialChar(args.name), publicId: publicId, password }
 
   // 2
   const user = await context.prisma.user.create({ data })

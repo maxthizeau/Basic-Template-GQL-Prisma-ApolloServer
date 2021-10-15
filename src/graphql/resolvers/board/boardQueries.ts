@@ -8,13 +8,13 @@ import { rules } from "../../accessRules"
 const boardQueries: IResolvers = {
   Query: {
     board: async (_parent, args, context: Context) => {
-      let access: any = rules.canSeeBoards(context)
-      if (access === false) {
+      // Error :
+      let access: any = await rules.canSeeThisBoard(context, args.where.id)
+      if (!access) {
         throw new Error("You don't have permission to access this resource")
       }
-      const queryAccess = access !== true ? access : {}
-      const fullWhere = { id: Number(args.where.id), ...queryAccess }
-      return await context.prisma.board.findUnique({ where: fullWhere })
+
+      return await context.prisma.board.findUnique({ where: { id: Number(args.where.id) } })
     },
     allBoards: async (_parent, args, context: Context) => {
       let access: any = rules.canSeeBoards(context)
