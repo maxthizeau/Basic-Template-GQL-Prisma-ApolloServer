@@ -112,7 +112,7 @@ export const rules = {
       members: { every: { userId: user.id } },
     }
 
-    const queryWhere: Prisma.BoardWhereInput = { AND: [{ id: teamId }, access] }
+    const queryWhere: Prisma.TeamWhereInput = { AND: [{ id: teamId }, access] }
     const canSeeThisOne = await context.prisma.team.findFirst({ where: queryWhere })
 
     return canSeeThisOne
@@ -139,7 +139,7 @@ export const rules = {
       members: { every: { userId: user.id, isAdmin: true } },
     }
 
-    const queryWhere: Prisma.BoardWhereInput = { AND: [{ id: teamId }, access] }
+    const queryWhere: Prisma.TeamWhereInput = { AND: [{ id: teamId }, access] }
     const canUpdateThisTeam = await context.prisma.team({ where: queryWhere })
     return canUpdateThisTeam
   },
@@ -158,7 +158,7 @@ export const rules = {
       },
     }
 
-    const queryWhere: Prisma.BoardWhereInput = { AND: [{ id: taskGroupId }, access] }
+    const queryWhere: Prisma.TaskGroupWhereInput = { AND: [{ id: taskGroupId }, access] }
     const canSeeThisOne = await context.prisma.taskGroup.findFirst({ where: queryWhere })
 
     return canSeeThisOne
@@ -214,7 +214,7 @@ export const rules = {
       },
     }
 
-    const queryWhere: Prisma.BoardWhereInput = { AND: [{ id: taskId }, access] }
+    const queryWhere: Prisma.TaskWhereInput = { AND: [{ id: taskId }, access] }
     const canSeeThisOne = await context.prisma.task.findFirst({ where: queryWhere })
 
     return canSeeThisOne
@@ -249,6 +249,62 @@ export const rules = {
       taskGroup: {
         board: {
           OR: [{ team: { members: { every: { userId: user.id } } } }, { ownerId: user.id }],
+        },
+      },
+    }
+
+    const queryWhere: Prisma.TaskWhereInput = { AND: [{ id: taskId }, access] }
+    const canUpdateThisOne = await context.prisma.task({ where: queryWhere })
+    return canUpdateThisOne
+  },
+  // Access : Should only access to teams where current user is in
+  async canSeeThisUserOnTeamRelation(context, userOnTeamId) {
+    if (!this.isLoggedIn(context)) return false
+    if (this.isAdmin(context)) return true
+
+    const { user } = context
+
+    const access: Prisma.UsersOnTeamWhereInput = {
+      team: {
+        members: {
+          every: { userId: user.id },
+        },
+      },
+    }
+
+    const queryWhere: Prisma.UsersOnTeamWhereInput = { AND: [{ id: userOnTeamId }, access] }
+    const canSeeThisOne = await context.prisma.userOnTeam.findFirst({ where: queryWhere })
+
+    return canSeeThisOne
+  },
+  // Access : Should only access to teams where current user is in
+  canSeeUserOnTeamRelations(context) {
+    if (!this.isLoggedIn(context)) return false
+    if (this.isAdmin(context)) return true
+
+    const { user } = context
+
+    const returnedWhereInput: Prisma.UsersOnTeamWhereInput = {
+      team: {
+        members: {
+          every: { userId: user.id },
+        },
+      },
+    }
+    return returnedWhereInput
+  },
+  // Access : A user should be able to manage a Task when :
+  // - He is member of the team > board > taskgroup > task
+  // - He is owner of the board
+  async canManageUserOnTeamRelations(context, taskId) {
+    if (!this.isLoggedIn(context)) return false
+    if (this.isAdmin(context)) return true
+    const { user } = context
+
+    const access: Prisma.UsersOnTeamWhereInput = {
+      team: {
+        members: {
+          every: { userId: user.id },
         },
       },
     }
