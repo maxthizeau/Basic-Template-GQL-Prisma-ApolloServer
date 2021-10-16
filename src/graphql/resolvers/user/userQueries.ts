@@ -1,7 +1,7 @@
 // import { QueryAllBoardsArgs } from "@src/generated/graphql"
 import { IResolvers } from "@graphql-tools/utils/Interfaces"
-import { Context } from "@src/graphql/prismaContext"
-import { getWhereSortByFirstSkipRequest } from "@src/graphql/resolvers/resolverFunctions"
+import { Context } from "src/graphql/prismaContext"
+import { getWhereSortByFirstSkipRequest } from "../resolverFunctions"
 import { Prisma } from ".prisma/client"
 import { rules } from "../../accessRules"
 

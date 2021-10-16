@@ -1,6 +1,6 @@
 import { IResolvers } from "@graphql-tools/utils/Interfaces"
-import { Context } from "@src/graphql/prismaContext"
-import { getWhereSortByFirstSkipRequest } from "@src/graphql/resolvers/resolverFunctions"
+import { Context } from "src/graphql/prismaContext"
+import { getWhereSortByFirstSkipRequest } from "../resolverFunctions"
 import { rules } from "../../accessRules"
 
 const taskGroupQueries: IResolvers = {

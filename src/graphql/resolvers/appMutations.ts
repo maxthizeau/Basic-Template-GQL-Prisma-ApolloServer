@@ -4,7 +4,7 @@ import { generatePublicId } from "./user/userMutations"
 import { removeSpecialChar } from "../../utils/stringFunctions"
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-const { APP_SECRET, getUserId } = require("@src/utils/utils")
+const { APP_SECRET, getUserId } = require("src/utils/utils")
 
 async function signup(parent, args, context, info) {
   const publicId = removeSpecialChar(generatePublicId(args.name))

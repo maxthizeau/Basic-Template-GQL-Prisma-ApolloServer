@@ -1,6 +1,5 @@
 import { IResolvers } from "@graphql-tools/utils/Interfaces"
-import { Context } from "@src/graphql/prismaContext"
-import { getRandomIntString } from "@src/utils/numberFunctions"
+import { Context } from "src/graphql/prismaContext"
 import { rules } from "../../accessRules"
 import { Prisma } from ".prisma/client"
 

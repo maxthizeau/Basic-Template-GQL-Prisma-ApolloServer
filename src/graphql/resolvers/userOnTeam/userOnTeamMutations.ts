@@ -1,5 +1,5 @@
 import { IResolvers } from "@graphql-tools/utils/Interfaces"
-import { Context } from "@src/graphql/prismaContext"
+import { Context } from "src/graphql/prismaContext"
 import { getRandomIntString } from "@src/utils/numberFunctions"
 
 const userOnTeamMutations: IResolvers = {

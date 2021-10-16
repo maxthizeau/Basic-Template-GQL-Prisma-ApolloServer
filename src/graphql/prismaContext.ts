@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client"
-import { getUserId } from "@src/utils/utils"
+import { getUserId } from "src/utils/utils"
 
 export interface Context {
   req: any
@@ -9,7 +9,7 @@ export interface Context {
 
 const prisma = new PrismaClient()
 
-export const context = ({ req }) => {
+export const context = ({ req }: any): Context => {
   return { ...req, prisma, user: req && req.headers.authorization ? getUserId(req, req.headers.authorization) : null }
 }
 

@@ -5,7 +5,7 @@ import { Types } from "@graphql-codegen/plugin-helpers"
 import { codegen } from "@graphql-codegen/core"
 import { PrismaClient } from "@prisma/client"
 import path from "path"
-import { schema } from "@src/graphql/schema"
+import { schema } from "src/graphql/schema"
 // import prismaContext from '@src/lib/prisma/prismaContext'
 
 async function performCodegen(options: Types.GenerateOptions): Promise<void> {

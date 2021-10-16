@@ -13,6 +13,7 @@
     /* Strict Type-Checking Options */
     "strict": true,                                 /* Enable all strict type-checking options. */
     "noImplicitAny": false,                       /* Raise error on expressions and declarations with an implied 'any' type. */
+    
     /* Module Resolution Options */
     "moduleResolution": "node",                  /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
     "baseUrl": ".",                             /* Base directory to resolve non-absolute module names. */
@@ -26,8 +27,10 @@
 
     /* Advanced Options */
     "skipLibCheck": true,                           /* Skip type checking of declaration files. */
-    "forceConsistentCasingInFileNames": true        /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true,        /* Disallow inconsistently-cased references to the same file. */
+    
+    "strictNullChecks": true,
   },
   "exclude": ["node_modules", "dist", "coverage"],
-  "include": ["src"]
+  "include": ["src", "tests"]
 }
