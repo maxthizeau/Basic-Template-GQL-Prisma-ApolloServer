@@ -1,5 +1,12 @@
 import bcrypt from "bcryptjs"
 
+export const usersCredentials = {
+  admin: { email: "john.admin@seed.com", password: "Passwd01" },
+  bob: { email: "bob.user@seed.com", password: "Passwd02" },
+  max: { email: "mac.user@seed.com", password: "Passwd03" },
+  michael: { email: "michael.user@seed.com", password: "Passwd04" },
+}
+
 export async function seedData(prisma) {
   // Adding Users :
 

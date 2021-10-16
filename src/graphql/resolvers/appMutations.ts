@@ -6,8 +6,22 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { APP_SECRET, getUserId } = require("src/utils/utils")
 
+function validateEmail(email) {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(email)
+}
+
 async function signup(parent, args, context, info) {
   const publicId = removeSpecialChar(generatePublicId(args.name))
+
+  if (args.password.length < 8) {
+    throw new Error("Your password should be at least 8 characters")
+  }
+  if (!validateEmail(args.email)) {
+    throw new Error("Please enter a valid email address")
+  }
+
   // 1
   const password = await bcrypt.hash(args.password, 10)
   const data = { ...args, name: removeSpecialChar(args.name), publicId: publicId, password }
