@@ -1,9 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 import bcrypt from "bcryptjs"
 
-export const prisma = new PrismaClient()
-
-export async function seedData() {
+export async function seedData(prisma) {
   // Adding Users :
 
   const johnAdmin = await prisma.user.upsert({
@@ -181,7 +179,7 @@ export async function seedData() {
   //   console.log({ teamBobMax, teamMichaelMax, teamBobMichael, bobBoard })
 }
 
-export async function deleteAll(log = false) {
+export async function deleteAll(prisma, log = false) {
   const deletedUserOnTeamCount = await prisma.usersOnTeam.deleteMany({})
   log && console.log(`🗑️ Deleted ${deletedUserOnTeamCount.count} users on team relations`)
   const deletedTasksCount = await prisma.task.deleteMany({})

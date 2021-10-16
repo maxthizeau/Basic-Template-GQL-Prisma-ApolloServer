@@ -1,6 +1,9 @@
-import { seedData, prisma } from "./seedDataFunction"
+import { seedData } from "./seedDataFunction"
+import { PrismaClient } from "@prisma/client"
 
-seedData()
+const prisma = new PrismaClient()
+
+seedData(prisma)
   .catch((e) => {
     console.error(e)
     process.exit(1)

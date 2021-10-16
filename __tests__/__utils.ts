@@ -9,7 +9,7 @@ import prisma from "../tests/client"
 import { getUserId } from "../src/utils/utils"
 import fetch from "cross-fetch"
 import { MockContext, Context, createMockContext } from "../tests/mockContext"
-import { prismaMock } from "../tests/singleton"
+// import { prismaMock } from "../tests/singleton"
 
 const PORT = 4600
 // const { HttpLink } = require('apollo-link-http');
@@ -20,13 +20,13 @@ const PORT = 4600
  * Integration testing utils
  */
 
-export const constructTestServer = () => {
+export const constructTestServer = (prisma) => {
   const server = new ApolloServer({
     schema,
     context: async ({ req }) => {
       return {
         ...req,
-        prismaMock,
+        prisma,
         user: req && req.headers.authorization ? getUserId(req, req.headers.authorization) : null,
       }
     },
