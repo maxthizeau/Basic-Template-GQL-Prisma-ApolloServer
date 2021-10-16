@@ -2,13 +2,13 @@ import { schema } from "../src/graphql/schema"
 import { createServer } from "http"
 import { ApolloServer } from "apollo-server-express"
 import express from "express"
-import { context as defaultContext } from "../src/graphql/prismaContext"
+
 import { HttpLink } from "apollo-link-http"
-import { execute, toPromise } from "apollo-link"
-import prisma from "../tests/client"
+import { execute } from "apollo-link"
+
 import { getUserId } from "../src/utils/utils"
 import fetch from "cross-fetch"
-import { MockContext, Context, createMockContext } from "../tests/mockContext"
+
 // import { prismaMock } from "../tests/singleton"
 
 const PORT = 4600

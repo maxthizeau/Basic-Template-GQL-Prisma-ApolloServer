@@ -1,13 +1,8 @@
+import { PrismaClient } from "@prisma/client"
 import { gql } from "apollo-server-express"
-// import { graphql } from "graphql"
-// import { createTestClient } from "apollo-server-testing"
 import { toPromise } from "apollo-link"
 import { constructTestServer, startTestServer } from "./__utils"
-// import prisma from "../tests/client"
-import bcrypt from "bcryptjs"
 import { deleteAll, seedData } from "../prisma/seedDataFunction"
-
-import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
@@ -63,7 +58,6 @@ describe("Queries", () => {
     const res: any = await toPromise(
       graphql({
         query: ALL_USER_QUERY,
-        variables: { pageSize: 1, after: "1517949900" },
       })
     )
 

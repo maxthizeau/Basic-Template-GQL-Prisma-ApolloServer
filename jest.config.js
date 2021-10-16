@@ -3,7 +3,7 @@ module.exports = {
   clearMocks: true,
   preset: "ts-jest",
   testEnvironment: "node",
-  setupFilesAfterEnv: ["<rootDir>/tests/singleton.ts"],
+  // setupFilesAfterEnv: ["<rootDir>/tests/singleton.ts"],
   modulePaths: ["<rootDir>"],
   moduleDirectories: ["node_modules"],
   testPathIgnorePatterns: ["/node_modules/", "/__utils"],
