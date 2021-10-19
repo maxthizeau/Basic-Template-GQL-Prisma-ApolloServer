@@ -73,4 +73,4 @@ const appMutations: IResolvers = {
   },
 }
 
-export default appMutations
+export { appMutations, login }

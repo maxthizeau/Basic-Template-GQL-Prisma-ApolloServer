@@ -39,17 +39,19 @@ export const constructTestServer = (prisma) => {
  * e2e Testing Utils
  */
 
-export const startTestServer = async (server) => {
+export const startTestServer = async (server, port = 4600, token: null | string = null) => {
   // if using apollo-server-express...
   const app = express()
   const httpServer = createServer(app)
+
   await server.start()
   server.applyMiddleware({ app })
-  httpServer.listen(PORT)
+  httpServer.listen(port)
 
   const link = new HttpLink({
-    uri: `http://localhost:${PORT}/graphql`,
+    uri: `http://localhost:${port}/graphql`,
     fetch,
+    headers: { authorization: token ? `Bearer ${token}` : "" },
   })
 
   const executeOperation = ({ query, variables = {} }) => execute(link, { query, variables })
