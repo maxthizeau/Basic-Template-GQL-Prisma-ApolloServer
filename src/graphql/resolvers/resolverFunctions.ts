@@ -21,7 +21,7 @@ function generatePrismaWhere(inputWhere): PrismaWhereInput {
       const element = inputWhere.OR[i]
       orFinal.push(generatePrismaWhere(inputWhere.OR[i]))
     }
-    console.log(orFinal)
+    // console.log(orFinal)
     whereFinal.OR = orFinal
   }
   // If There is an "AND", then generate an array of UserWhereInput and place it in whereFinal.AND
@@ -33,7 +33,7 @@ function generatePrismaWhere(inputWhere): PrismaWhereInput {
       const element = inputWhere.AND[i]
       andFinal.push(generatePrismaWhere(inputWhere.AND[i]))
     }
-    console.log(andFinal)
+    // console.log(andFinal)
     whereFinal.AND = andFinal
   }
 
@@ -81,6 +81,6 @@ export function getWhereSortByFirstSkipRequest(args: QueryAllArgs): any {
 
   finalReturnedQuery.where = whereFinal
   finalReturnedQuery.orderBy = sortByFinal
-  console.log(finalReturnedQuery)
+  // console.log(finalReturnedQuery)
   return finalReturnedQuery
 }

@@ -36,6 +36,18 @@ const taskMutations: IResolvers = {
 
       return await context.prisma.task.delete({ where: { id: Number(args.id) } })
     },
+    checkTask: async (_root, args, context: Context) => {
+      const access: any = await rules.canManageTasks(context, args.id)
+      if (!access) {
+        throw new Error("You don't have permission to access this resource")
+      }
+      const requestedTask = await context.prisma.task.findUnique({ where: { id: args.id } })
+      if (!requestedTask) {
+        throw new Error("Requested task not found")
+      }
+
+      return await context.prisma.task.update({ where: { id: args.id }, data: { checked: !requestedTask.checked } })
+    },
   },
 }
 export default taskMutations

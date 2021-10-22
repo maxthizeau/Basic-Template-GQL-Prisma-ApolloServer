@@ -22,6 +22,7 @@ const boardQueries: IResolvers = {
         throw new Error("You don't have permission to access this resource")
       }
       const queryAccess = access !== true ? access : {}
+      console.log("query access", queryAccess)
 
       // Generate all the args (where, first, skip, sortBy)
       const queryArgs = getWhereSortByFirstSkipRequest(args)

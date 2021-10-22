@@ -19,7 +19,7 @@ const taskQueries: IResolvers = {
       // Access : A user should be able to see tasks when :
       // - He is member of the team > board > taskgroup > task
       // - He is owner of the board
-      const access: any = await rules.canSeeThisTaskGroup(context, args.id)
+      const access: any = await rules.canSeeTasks(context)
       if (!access) {
         throw new Error("You don't have permission to access this resource")
       }

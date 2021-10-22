@@ -271,6 +271,7 @@ type Mutation {
   updateBoard(id: Int!, data: UpdateBoardInput!): Board!
   deleteBoard(id: Int!): Board
   createTask(data: CreateTaskInput!): Task!
+  checkTask(id: Int!): Task!
   updateTask(id: Int!, data: UpdateTaskInput!): Task!
   deleteTask(id: Int!): Task
   createTaskGroup(data: CreateTaskGroupInput!): TaskGroup!
@@ -313,7 +314,7 @@ type User {
   password: String
   registeredAt: DateTime
   updatedAt: DateTime
-  teams: UserOnTeam
+  teams(where: WhereUserOnTeamInput, sortBy: [SortUserOnTeamBy], first: Int, skip: Int): [UserOnTeam]
   boards(where: WhereBoardInput, sortBy: [SortBoardBy], first: Int, skip: Int): [Board]
 }
 
@@ -512,6 +513,7 @@ input RelateToOneBoardInput {
 type Task {
   id: Int!
   name: String
+  checked: Boolean
   description: String
   taskGroup: TaskGroup
 }
@@ -525,6 +527,7 @@ input CreateTaskInput {
 input UpdateTaskInput {
   name: String
   description: String
+  checked: Boolean
   taskGroup: RelateToOneTaskGroupInput
 }
 
@@ -543,6 +546,7 @@ input WhereTaskInput {
   name_lte: String
   name_gt: String
   name_gte: String
+  checked_is: Boolean
   description_is: String
   description_not: String
   description_lt: String

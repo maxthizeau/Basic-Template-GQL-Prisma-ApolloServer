@@ -35,12 +35,15 @@ const teamQueries: IResolvers = {
   },
   Team: {
     members: async (_parent, args, context: Context) => {
+      // No need to add access since users are restricted to connected users and team queries already need to be connected
       const argsRequest = getWhereSortByFirstSkipRequest(args)
       argsRequest.where = { ...argsRequest.where, teamId: _parent.id }
       const result = await context.prisma.usersOnTeam.findMany(argsRequest)
+      console.log("Result of Team.members", result)
       return result
     },
     boards: async (_parent, args, context: Context) => {
+      // No need to add access because only boards of the team that can access current user are returned in parent
       const argsRequest = getWhereSortByFirstSkipRequest(args)
       argsRequest.where = { ...argsRequest.where, team: { id: _parent.id } }
       const result = await context.prisma.board.findMany(argsRequest)

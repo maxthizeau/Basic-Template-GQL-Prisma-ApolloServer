@@ -22,12 +22,20 @@ const userOnTeamQueries: IResolvers = {
     },
   },
   UserOnTeam: {
-    user: async (_parent, args, context: Context) => {
-      const result = await context.prisma.user.findUnique({ where: { id: _parent.userId } })
+    user: async (parent, args, context: Context) => {
+      // console.log("Parent UserOnTeam.user", parent)
+      const result = await context.prisma.user.findUnique({ where: { id: parent.userId } })
       return result
     },
-    team: async (_parent, args, context: Context) => {
-      const result = await context.prisma.team.findUnique({ where: { id: _parent.teamId } })
+    team: async (parent, args, context: Context) => {
+      // console.log("Parent UserOnTeam.team", parent)
+      console.log(parent.teamId)
+      const access: any = await rules.canSeeThisTeam(context, parent.teamId)
+      console.log("access : ", access)
+      if (!access) {
+        return
+      }
+      const result = await context.prisma.team.findUnique({ where: { id: parent.teamId } })
       return result
     },
   },

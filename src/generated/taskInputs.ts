@@ -3,7 +3,7 @@
 import { gql } from "apollo-server-express"
 
 export const taskInputs = gql`
-  input WhereTaskInput { 
+  input WhereTaskInput {
     AND: [WhereTaskInput]
     OR: [WhereTaskInput]
     id_is: Int
@@ -18,6 +18,7 @@ export const taskInputs = gql`
     name_lte: String
     name_gt: String
     name_gte: String
+    checked_is: Boolean
     description_is: String
     description_not: String
     description_lt: String
@@ -28,11 +29,11 @@ export const taskInputs = gql`
     taskGroup_is_null: Boolean
   }
 
-  input WhereUniqueTaskInput { 
-    id: Int! 
+  input WhereUniqueTaskInput {
+    id: Int!
   }
 
-  enum SortTaskBy { 
+  enum SortTaskBy {
     id_ASC
     id_DESC
     name_ASC
@@ -43,23 +44,22 @@ export const taskInputs = gql`
     taskGroup_DESC
   }
 
-  input RelateToManyTaskInput { 
+  input RelateToManyTaskInput {
     create: [CreateTaskInput]
     connect: [WhereUniqueTaskInput]
     disconnect: [WhereUniqueTaskInput]
     disconnectAll: Boolean
-}
+  }
 
-  input RelateToOneTaskInput { 
+  input RelateToOneTaskInput {
     create: CreateTaskInput
     connect: WhereUniqueTaskInput
     disconnect: WhereUniqueTaskInput
     disconnectAll: Boolean
-}
+  }
 
   extend type Query {
     task(where: WhereUniqueTaskInput!): Task
     allTasks(where: WhereTaskInput, sortBy: [SortTaskBy!], first: Int, skip: Int): [Task]
   }
-
 `

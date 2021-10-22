@@ -9,7 +9,7 @@ const user = gql`
     password: String
     registeredAt: DateTime
     updatedAt: DateTime
-    teams: UserOnTeam
+    teams(where: WhereUserOnTeamInput, sortBy: [SortUserOnTeamBy], first: Int, skip: Int): [UserOnTeam]
     boards(where: WhereBoardInput, sortBy: [SortBoardBy], first: Int, skip: Int): [Board]
   }
 `

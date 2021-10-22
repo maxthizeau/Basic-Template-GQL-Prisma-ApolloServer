@@ -31,7 +31,7 @@ export const rules = {
         {
           team: {
             members: {
-              every: {
+              some: {
                 userId: user.id,
               },
             },
@@ -51,7 +51,7 @@ export const rules = {
       OR: [
         { ownerId: user.id },
         {
-          team: { members: { every: { userId: user.id } } },
+          team: { members: { some: { userId: user.id } } },
         },
       ],
     }
@@ -109,7 +109,7 @@ export const rules = {
     const { user } = context
 
     const access: Prisma.TeamWhereInput = {
-      members: { every: { userId: user.id } },
+      members: { some: { userId: user.id } },
     }
 
     const queryWhere: Prisma.TeamWhereInput = { AND: [{ id: teamId }, access] }
@@ -125,7 +125,7 @@ export const rules = {
     const { user } = context
 
     const returnedWhereInput: Prisma.TeamWhereInput = {
-      members: { every: { userId: user.id } },
+      members: { some: { userId: user.id } },
     }
     return returnedWhereInput
   },
@@ -154,11 +154,13 @@ export const rules = {
 
     const access: Prisma.TaskGroupWhereInput = {
       board: {
-        OR: [{ team: { members: { every: { userId: user.id } } } }, { ownerId: user.id }],
+        OR: [{ team: { members: { some: { userId: user.id } } } }, { ownerId: user.id }],
       },
     }
 
     const queryWhere: Prisma.TaskGroupWhereInput = { AND: [{ id: taskGroupId }, access] }
+
+    console.log(queryWhere)
     const canSeeThisOne = await context.prisma.taskGroup.findFirst({ where: queryWhere })
 
     return canSeeThisOne
@@ -174,7 +176,7 @@ export const rules = {
 
     const returnedWhereInput: Prisma.TaskGroupWhereInput = {
       board: {
-        OR: [{ team: { members: { every: { userId: user.id } } } }, { ownerId: user.id }],
+        OR: [{ team: { members: { some: { userId: user.id } } } }, { ownerId: user.id }],
       },
     }
     return returnedWhereInput
@@ -189,7 +191,7 @@ export const rules = {
 
     const access: Prisma.TaskGroupWhereInput = {
       board: {
-        OR: [{ team: { members: { every: { userId: user.id } } } }, { ownerId: user.id }],
+        OR: [{ team: { members: { some: { userId: user.id } } } }, { ownerId: user.id }],
       },
     }
 
@@ -209,7 +211,7 @@ export const rules = {
     const access: Prisma.TaskWhereInput = {
       taskGroup: {
         board: {
-          OR: [{ team: { members: { every: { userId: user.id } } } }, { ownerId: user.id }],
+          OR: [{ team: { members: { some: { userId: user.id } } } }, { ownerId: user.id }],
         },
       },
     }
@@ -231,7 +233,7 @@ export const rules = {
     const returnedWhereInput: Prisma.TaskWhereInput = {
       taskGroup: {
         board: {
-          OR: [{ team: { members: { every: { userId: user.id } } } }, { ownerId: user.id }],
+          OR: [{ team: { members: { some: { userId: user.id } } } }, { ownerId: user.id }],
         },
       },
     }
@@ -248,13 +250,13 @@ export const rules = {
     const access: Prisma.TaskWhereInput = {
       taskGroup: {
         board: {
-          OR: [{ team: { members: { every: { userId: user.id } } } }, { ownerId: user.id }],
+          OR: [{ team: { members: { some: { userId: user.id } } } }, { ownerId: user.id }],
         },
       },
     }
 
     const queryWhere: Prisma.TaskWhereInput = { AND: [{ id: taskId }, access] }
-    const canUpdateThisOne = await context.prisma.task({ where: queryWhere })
+    const canUpdateThisOne = await context.prisma.task.findFirst({ where: queryWhere })
     return canUpdateThisOne
   },
   // Access : Should only access to teams where current user is in
@@ -287,10 +289,15 @@ export const rules = {
     const returnedWhereInput: Prisma.UsersOnTeamWhereInput = {
       team: {
         members: {
-          every: { userId: user.id },
+          some: { userId: user.id },
         },
       },
     }
+
+    // const returnedWhereInput: Prisma.UsersOnTeamWhereInput = {
+    //   userId: user.id,
+    // }
+    // console.log("!", returnedWhereInput.team?.members?.every)
     return returnedWhereInput
   },
   // Access : A user should be able to manage a Task when :
@@ -304,7 +311,7 @@ export const rules = {
     const access: Prisma.UsersOnTeamWhereInput = {
       team: {
         members: {
-          every: { userId: user.id },
+          some: { userId: user.id },
         },
       },
     }

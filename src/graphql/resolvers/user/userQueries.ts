@@ -28,20 +28,36 @@ const userQueries: IResolvers = {
     boards: async (parent, args, context: Context) => {
       // TODO : access restricted to boards that parent can see
       if (!parent.id) return []
+
+      let access: any = rules.canSeeBoards(context)
+      if (!access) {
+        return []
+      }
+      const queryAccess = access !== true ? access : {}
+
       const argsRequest = getWhereSortByFirstSkipRequest(args)
-      argsRequest.where = { ...argsRequest.where, ownerId: parent.id }
+      argsRequest.where = { ...argsRequest.where, ...queryAccess, ownerId: parent.id }
       const result = await context.prisma.board.findMany(argsRequest)
       return result
     },
     // To do UserOnTeam
-    // teams: async (parent, args, context: Context) => {
-    //   if (!parent.id) return []
-    //   console.log("teamsMember requested")
-    //   const argsRequest = getWhereSortByFirstSkipRequest(args)
-    //   // argsRequest.where = { ...argsRequest.where, members: { has: _parent.id } }
-    //   const result = await context.prisma.team.findMany(argsRequest)
-    //   return result
-    // },
+    teams: async (parent, args, context: Context) => {
+      if (!parent.id) return []
+
+      let access: any = rules.canSeeUserOnTeamRelations(context)
+      if (!access) {
+        return []
+      }
+      const queryAccess = access !== true ? access : {}
+
+      const argsRequest: Prisma.UsersOnTeamFindManyArgs = getWhereSortByFirstSkipRequest(args)
+      console.log("parent id : ", parent.id)
+      argsRequest.where = { ...argsRequest.where, ...queryAccess, userId: parent.id }
+
+      const result = await context.prisma.usersOnTeam.findMany(argsRequest)
+
+      return result
+    },
   },
 }
 export default userQueries
