@@ -57,8 +57,10 @@ export const rules = {
     }
 
     const queryWhere: Prisma.BoardWhereInput = { AND: [{ id: boardId }, access] }
+    // console.log(queryWhere)
+    // const canSeeThisOne = await context.prisma.board.findUnique({ where: queryWhere })
     const canSeeThisOne = await context.prisma.board.findFirst({ where: queryWhere })
-    console.log(canSeeThisOne)
+    // console.log("Can see this one : ", canSeeThisOne)
     return canSeeThisOne
   },
   // A user should be able to manage (update/delete) boards he owns or he is admin of the team that can access it
@@ -81,7 +83,7 @@ export const rules = {
         {
           team: {
             members: {
-              every: {
+              some: {
                 userId: user.id,
                 isAdmin: true,
               },
@@ -136,11 +138,13 @@ export const rules = {
     const { user } = context
 
     const access: Prisma.TeamWhereInput = {
-      members: { every: { userId: user.id, isAdmin: true } },
+      members: { some: { userId: user.id, isAdmin: true } },
     }
 
     const queryWhere: Prisma.TeamWhereInput = { AND: [{ id: teamId }, access] }
-    const canUpdateThisTeam = await context.prisma.team({ where: queryWhere })
+    // console.log(JSON.stringify(queryWhere, null, 4))
+    const canUpdateThisTeam = await context.prisma.team.findFirst({ where: queryWhere })
+    // console.log(canUpdateThisTeam)
     return canUpdateThisTeam
   },
   // Access : A user should be able to see a Task Group when :
@@ -160,7 +164,7 @@ export const rules = {
 
     const queryWhere: Prisma.TaskGroupWhereInput = { AND: [{ id: taskGroupId }, access] }
 
-    console.log(queryWhere)
+    // console.log(queryWhere)
     const canSeeThisOne = await context.prisma.taskGroup.findFirst({ where: queryWhere })
 
     return canSeeThisOne
@@ -196,7 +200,7 @@ export const rules = {
     }
 
     const queryWhere: Prisma.TaskGroupWhereInput = { AND: [{ id: taskGroupID }, access] }
-    const canUpdateThisOne = await context.prisma.taskGroup({ where: queryWhere })
+    const canUpdateThisOne = await context.prisma.taskGroup.findFirst({ where: queryWhere })
     return canUpdateThisOne
   },
   // Access : A user should be able to see a Task when :
@@ -269,7 +273,7 @@ export const rules = {
     const access: Prisma.UsersOnTeamWhereInput = {
       team: {
         members: {
-          every: { userId: user.id },
+          some: { userId: user.id },
         },
       },
     }
@@ -317,7 +321,7 @@ export const rules = {
     }
 
     const queryWhere: Prisma.TaskWhereInput = { AND: [{ id: taskId }, access] }
-    const canUpdateThisOne = await context.prisma.task({ where: queryWhere })
+    const canUpdateThisOne = await context.prisma.task.findFirst({ where: queryWhere })
     return canUpdateThisOne
   },
 }

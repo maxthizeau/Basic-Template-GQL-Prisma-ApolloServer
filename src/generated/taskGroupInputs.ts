@@ -3,7 +3,7 @@
 import { gql } from "apollo-server-express"
 
 export const taskGroupInputs = gql`
-  input WhereTaskGroupInput { 
+  input WhereTaskGroupInput {
     AND: [WhereTaskGroupInput]
     OR: [WhereTaskGroupInput]
     id_is: Int
@@ -18,6 +18,12 @@ export const taskGroupInputs = gql`
     name_lte: String
     name_gt: String
     name_gte: String
+    order_is: String
+    order_not: String
+    order_lt: String
+    order_lte: String
+    order_gt: String
+    order_gte: String
     description_is: String
     description_not: String
     description_lt: String
@@ -30,40 +36,41 @@ export const taskGroupInputs = gql`
     board_is_null: Boolean
   }
 
-  input WhereUniqueTaskGroupInput { 
-    id: Int! 
+  input WhereUniqueTaskGroupInput {
+    id: Int!
   }
 
-  enum SortTaskGroupBy { 
+  enum SortTaskGroupBy {
     id_ASC
     id_DESC
     name_ASC
     name_DESC
     description_ASC
     description_DESC
+    order_ASC
+    order_DESC
     tasks_ASC
     tasks_DESC
     board_ASC
     board_DESC
   }
 
-  input RelateToManyTaskGroupInput { 
+  input RelateToManyTaskGroupInput {
     create: [CreateTaskGroupInput]
     connect: [WhereUniqueTaskGroupInput]
     disconnect: [WhereUniqueTaskGroupInput]
     disconnectAll: Boolean
-}
+  }
 
-  input RelateToOneTaskGroupInput { 
+  input RelateToOneTaskGroupInput {
     create: CreateTaskGroupInput
     connect: WhereUniqueTaskGroupInput
     disconnect: WhereUniqueTaskGroupInput
     disconnectAll: Boolean
-}
+  }
 
   extend type Query {
     taskGroup(where: WhereUniqueTaskGroupInput!): TaskGroup
     allTaskGroups(where: WhereTaskGroupInput, sortBy: [SortTaskGroupBy!], first: Int, skip: Int): [TaskGroup]
   }
-
 `

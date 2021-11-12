@@ -31,6 +31,15 @@ const boardTypesDefs = gql`
     createBoard(data: CreateBoardInput!): Board!
     updateBoard(id: Int!, data: UpdateBoardInput!): Board!
     deleteBoard(id: Int!): Board
+    changeTaskGroupsOrder(boardId: Int!, taskGroupIds: [Int]!): Board
+    changeTaskOrder(
+      boardId: Int!
+      fromTaskGroupId: Int!
+      toTaskGroupId: Int!
+      fromTasksArr: [Int]!
+      toTasksArr: [Int]!
+      movedTaskId: Int!
+    ): Board
   }
 `
 

@@ -2,6 +2,7 @@ import { IResolvers } from "@graphql-tools/utils/Interfaces"
 import { Context } from "src/graphql/prismaContext"
 import { getRandomIntString } from "@src/utils/numberFunctions"
 import { rules } from "../../accessRules"
+import { ForbiddenError } from "apollo-server-errors"
 
 const taskMutations: IResolvers = {
   Mutation: {
@@ -9,10 +10,23 @@ const taskMutations: IResolvers = {
       // Access : A user should be logged in to create task
       const access: any = rules.isLoggedIn(context)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
       const { data } = args
-      return await context.prisma.task.create({ data })
+      const id = args.data.taskGroup.create || args.data.taskGroup.connect
+
+      const resultCount = await context.prisma.task.aggregate({
+        _count: {
+          taskGroupId: true,
+        },
+        where: {
+          taskGroupId: id.id,
+        },
+      })
+      const order = resultCount._count.taskGroupId ? resultCount._count.taskGroupId + 1 : 0
+      const res = await context.prisma.task.create({ data: { ...data, order } })
+
+      return res
     },
     updateTask: async (_root, args, context: Context) => {
       // Access : A user should be able to manage a Task when :
@@ -20,7 +34,7 @@ const taskMutations: IResolvers = {
       // - He is owner of the board
       const access: any = await rules.canManageTasks(context, args.id)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
 
       return await context.prisma.task.update({ where: { id: Number(args.id) }, data: { ...args.data } })
@@ -31,7 +45,7 @@ const taskMutations: IResolvers = {
       // - He is owner of the board
       const access: any = await rules.canManageTasks(context, args.id)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
 
       return await context.prisma.task.delete({ where: { id: Number(args.id) } })
@@ -39,11 +53,11 @@ const taskMutations: IResolvers = {
     checkTask: async (_root, args, context: Context) => {
       const access: any = await rules.canManageTasks(context, args.id)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
       const requestedTask = await context.prisma.task.findUnique({ where: { id: args.id } })
       if (!requestedTask) {
-        throw new Error("Requested task not found")
+        throw new ForbiddenError("Requested task not found")
       }
 
       return await context.prisma.task.update({ where: { id: args.id }, data: { checked: !requestedTask.checked } })

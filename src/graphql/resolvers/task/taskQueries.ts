@@ -2,6 +2,7 @@ import { IResolvers } from "@graphql-tools/utils/Interfaces"
 import { Context } from "src/graphql/prismaContext"
 import { getWhereSortByFirstSkipRequest } from "../resolverFunctions"
 import { rules } from "../../accessRules"
+import { ForbiddenError } from "apollo-server-errors"
 
 const taskQueries: IResolvers = {
   Query: {
@@ -11,7 +12,7 @@ const taskQueries: IResolvers = {
       // - He is owner of the board
       const access: any = await rules.canSeeThisTask(context, args.id)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
       return await context.prisma.task.findUnique({ where: { id: Number(args.where.id) } })
     },
@@ -21,16 +22,13 @@ const taskQueries: IResolvers = {
       // - He is owner of the board
       const access: any = await rules.canSeeTasks(context)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
       const queryAccess = access !== true ? access : {}
 
       const queryArgs = getWhereSortByFirstSkipRequest(args)
 
-      queryArgs.where = {
-        ...queryArgs.where,
-        ...queryAccess,
-      }
+      queryArgs.where = { AND: [queryArgs.where, queryAccess] }
 
       const result = await context.prisma.task.findMany(queryArgs)
       return result

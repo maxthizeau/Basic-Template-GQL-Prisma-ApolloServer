@@ -18,6 +18,12 @@ export const taskInputs = gql`
     name_lte: String
     name_gt: String
     name_gte: String
+    order_is: String
+    order_not: String
+    order_lt: String
+    order_lte: String
+    order_gt: String
+    order_gte: String
     checked_is: Boolean
     description_is: String
     description_not: String
@@ -38,6 +44,8 @@ export const taskInputs = gql`
     id_DESC
     name_ASC
     name_DESC
+    order_ASC
+    order_DESC
     description_ASC
     description_DESC
     taskGroup_ASC

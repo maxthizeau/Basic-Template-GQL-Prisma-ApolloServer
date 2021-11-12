@@ -41,8 +41,9 @@ model Task {
   name        String
   description String?
   checked     Boolean   @default(false)
+  order       Int       @default(1)
   taskGroupId Int
-  taskGroup   TaskGroup @relation(fields: [taskGroupId], references: [id])
+  taskGroup   TaskGroup @relation(fields: [taskGroupId], references: [id], onDelete: Cascade)
 }
 
 model TaskGroup {
@@ -50,7 +51,8 @@ model TaskGroup {
   name        String
   description String?
   boardId     Int
-  board       Board   @relation(fields: [boardId], references: [id])
+  order       Int     @default(1)
+  board       Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
   tasks       Task[]
 }
 

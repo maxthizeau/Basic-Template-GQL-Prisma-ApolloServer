@@ -270,6 +270,8 @@ type Mutation {
   createBoard(data: CreateBoardInput!): Board!
   updateBoard(id: Int!, data: UpdateBoardInput!): Board!
   deleteBoard(id: Int!): Board
+  changeTaskGroupsOrder(boardId: Int!, taskGroupIds: [Int]!): Board
+  changeTaskOrder(boardId: Int!, fromTaskGroupId: Int!, toTaskGroupId: Int!, fromTasksArr: [Int]!, toTasksArr: [Int]!, movedTaskId: Int!): Board
   createTask(data: CreateTaskInput!): Task!
   checkTask(id: Int!): Task!
   updateTask(id: Int!, data: UpdateTaskInput!): Task!
@@ -277,6 +279,7 @@ type Mutation {
   createTaskGroup(data: CreateTaskGroupInput!): TaskGroup!
   updateTaskGroup(id: Int!, data: UpdateTaskGroupInput!): TaskGroup!
   deleteTaskGroup(id: Int!): TaskGroup
+  changeTaskOrderFromTaskGroup(taskGroupId: Int!, taskIds: [Int]!): TaskGroup
   createTeam(data: CreateTeamInput!): Team!
   updateTeam(id: Int!, data: UpdateTeamInput!): Team!
   deleteTeam(id: Int!): Team
@@ -296,6 +299,7 @@ type Query {
   allUsers(where: WhereUserInput, sortBy: [SortUserBy!], first: Int, skip: Int): [User]
   board(where: WhereUniqueBoardInput!): Board
   allBoards(where: WhereBoardInput, sortBy: [SortBoardBy!], first: Int, skip: Int): [Board]
+  authenticatedUser: User
   task(where: WhereUniqueTaskInput!): Task
   allTasks(where: WhereTaskInput, sortBy: [SortTaskBy!], first: Int, skip: Int): [Task]
   taskGroup(where: WhereUniqueTaskGroupInput!): TaskGroup
@@ -514,6 +518,7 @@ type Task {
   id: Int!
   name: String
   checked: Boolean
+  order: Int
   description: String
   taskGroup: TaskGroup
 }
@@ -546,6 +551,12 @@ input WhereTaskInput {
   name_lte: String
   name_gt: String
   name_gte: String
+  order_is: String
+  order_not: String
+  order_lt: String
+  order_lte: String
+  order_gt: String
+  order_gte: String
   checked_is: Boolean
   description_is: String
   description_not: String
@@ -566,6 +577,8 @@ enum SortTaskBy {
   id_DESC
   name_ASC
   name_DESC
+  order_ASC
+  order_DESC
   description_ASC
   description_DESC
   taskGroup_ASC
@@ -590,6 +603,7 @@ type TaskGroup {
   id: Int!
   name: String
   description: String
+  order: Int
   tasks(where: WhereTaskInput, sortBy: [SortTaskBy], first: Int, skip: Int): [Task]
   board: Board
 }
@@ -623,6 +637,12 @@ input WhereTaskGroupInput {
   name_lte: String
   name_gt: String
   name_gte: String
+  order_is: String
+  order_not: String
+  order_lt: String
+  order_lte: String
+  order_gt: String
+  order_gte: String
   description_is: String
   description_not: String
   description_lt: String
@@ -646,6 +666,8 @@ enum SortTaskGroupBy {
   name_DESC
   description_ASC
   description_DESC
+  order_ASC
+  order_DESC
   tasks_ASC
   tasks_DESC
   board_ASC

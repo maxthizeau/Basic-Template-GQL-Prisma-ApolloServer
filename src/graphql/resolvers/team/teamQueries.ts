@@ -2,7 +2,8 @@ import { IResolvers } from "@graphql-tools/utils/Interfaces"
 import { Context } from "src/graphql/prismaContext"
 import { getWhereSortByFirstSkipRequest } from "../resolverFunctions"
 import { rules } from "../../accessRules"
-import { Prisma } from ".prisma/client"
+import { prisma, Prisma } from ".prisma/client"
+import { ApolloError, ForbiddenError, UserInputError } from "apollo-server-errors"
 
 const teamQueries: IResolvers = {
   Query: {
@@ -10,7 +11,7 @@ const teamQueries: IResolvers = {
       // Access : A user should only access a team when he is member of
       const access: any = await rules.canSeeThisTeam(context, args.id)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
 
       return await context.prisma.team.findUnique({ where: { id: Number(args.where.id) } })
@@ -19,15 +20,13 @@ const teamQueries: IResolvers = {
       // Access : A user should only acces teams he's member of
       const access: any = rules.canSeeTeams(context)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
       const queryAccess = access !== true ? access : {}
+
       const queryArgs = getWhereSortByFirstSkipRequest(args)
 
-      queryArgs.where = {
-        ...queryArgs.where,
-        ...queryAccess,
-      }
+      queryArgs.where = { AND: [queryArgs.where, queryAccess] }
 
       const result = await context.prisma.team.findMany(queryArgs)
       return result
@@ -39,7 +38,7 @@ const teamQueries: IResolvers = {
       const argsRequest = getWhereSortByFirstSkipRequest(args)
       argsRequest.where = { ...argsRequest.where, teamId: _parent.id }
       const result = await context.prisma.usersOnTeam.findMany(argsRequest)
-      console.log("Result of Team.members", result)
+
       return result
     },
     boards: async (_parent, args, context: Context) => {

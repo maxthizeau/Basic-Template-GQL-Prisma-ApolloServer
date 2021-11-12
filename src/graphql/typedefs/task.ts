@@ -5,6 +5,7 @@ const task = gql`
     id: Int!
     name: String
     checked: Boolean
+    order: Int
     description: String
     taskGroup: TaskGroup
   }
@@ -21,6 +22,10 @@ const taskTypesDefs = gql`
     description: String
     checked: Boolean
     taskGroup: RelateToOneTaskGroupInput
+  }
+
+  extend type Query {
+    authenticatedUser: User
   }
 
   extend type Mutation {

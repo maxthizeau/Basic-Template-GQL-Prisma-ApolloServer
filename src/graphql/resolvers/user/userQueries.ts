@@ -4,24 +4,32 @@ import { Context } from "src/graphql/prismaContext"
 import { getWhereSortByFirstSkipRequest } from "../resolverFunctions"
 import { Prisma } from ".prisma/client"
 import { rules } from "../../accessRules"
+import { ForbiddenError } from "apollo-server-errors"
 
 const userQueries: IResolvers = {
   Query: {
     user: async (_parent, args, context: Context) => {
       let access: any = rules.isLoggedIn(context)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
       return await context.prisma.user.findUnique({ where: { id: Number(args.where.id) } })
     },
     allUsers: async (_parent, args, context: Context) => {
       let access: any = rules.isLoggedIn(context)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
       const queryArgs = getWhereSortByFirstSkipRequest(args)
       const result = await context.prisma.user.findMany(queryArgs)
       return result
+    },
+    authenticatedUser: async (_parent, args, context: Context) => {
+      let access: any = rules.isLoggedIn(context)
+      if (!access) {
+        return null
+      }
+      return await context.prisma.user.findUnique({ where: { id: context.user.id } })
     },
   },
   User: {
@@ -51,7 +59,6 @@ const userQueries: IResolvers = {
       const queryAccess = access !== true ? access : {}
 
       const argsRequest: Prisma.UsersOnTeamFindManyArgs = getWhereSortByFirstSkipRequest(args)
-      console.log("parent id : ", parent.id)
       argsRequest.where = { ...argsRequest.where, ...queryAccess, userId: parent.id }
 
       const result = await context.prisma.usersOnTeam.findMany(argsRequest)

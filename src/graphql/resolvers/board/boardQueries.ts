@@ -4,14 +4,16 @@ import { getWhereSortByFirstSkipRequest } from "../resolverFunctions"
 import { query } from "express"
 import { Prisma } from ".prisma/client"
 import { rules } from "../../accessRules"
+import { ForbiddenError } from "apollo-server-errors"
+import { SortBoardBy } from "@src/generated/graphql"
 
 const boardQueries: IResolvers = {
   Query: {
     board: async (_parent, args, context: Context) => {
-      // Error :
       let access: any = await rules.canSeeThisBoard(context, args.where.id)
+
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
 
       return await context.prisma.board.findUnique({ where: { id: Number(args.where.id) } })
@@ -19,18 +21,14 @@ const boardQueries: IResolvers = {
     allBoards: async (_parent, args, context: Context) => {
       let access: any = rules.canSeeBoards(context)
       if (access === false) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
       const queryAccess = access !== true ? access : {}
-      console.log("query access", queryAccess)
 
       // Generate all the args (where, first, skip, sortBy)
       const queryArgs = getWhereSortByFirstSkipRequest(args)
 
-      queryArgs.where = {
-        ...queryArgs.where,
-        ...queryAccess,
-      }
+      queryArgs.where = { AND: [queryArgs.where, queryAccess] }
 
       const result = await context.prisma.board.findMany(queryArgs)
       return result

@@ -2,6 +2,7 @@ import { IResolvers } from "@graphql-tools/utils/Interfaces"
 import { Context } from "../prismaContext"
 import { generatePublicId } from "./user/userMutations"
 import { removeSpecialChar } from "../../utils/stringFunctions"
+import { AuthenticationError } from "apollo-server-errors"
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { APP_SECRET, getUserId } = require("src/utils/utils")
@@ -43,15 +44,14 @@ async function login(parent, args, context, info) {
   // 1
   const user = await context.prisma.user.findUnique({ where: { email: args.email } })
   if (!user) {
-    throw new Error("No such user found")
+    throw new AuthenticationError("No such user found")
   }
 
   // 2
   const valid = await bcrypt.compare(args.password, user.password)
   if (!valid) {
-    throw new Error("Invalid password")
+    throw new AuthenticationError("Invalid password")
   }
-  // console.log("USER LOGIN : ", user)
 
   const token = jwt.sign({ user: user }, APP_SECRET)
 

@@ -152,6 +152,12 @@ export type Scalars = {
   Void: any;
 };
 
+export type AuthPayload = {
+  __typename?: 'AuthPayload';
+  token?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
+};
+
 export type Board = {
   __typename?: 'Board';
   description?: Maybe<Scalars['String']>;
@@ -213,6 +219,8 @@ export type CreateUserOnTeamInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  changeTaskGroupsOrder?: Maybe<Board>;
+  checkTask: Task;
   createBoard: Board;
   createTask: Task;
   createTaskGroup: TaskGroup;
@@ -225,13 +233,26 @@ export type Mutation = {
   deleteTeam?: Maybe<Team>;
   deleteUser?: Maybe<User>;
   deleteUserOnTeam?: Maybe<UserOnTeam>;
+  login?: Maybe<AuthPayload>;
   root: Scalars['String'];
+  signup?: Maybe<AuthPayload>;
   updateBoard: Board;
   updateTask: Task;
   updateTaskGroup: TaskGroup;
   updateTeam: Team;
   updateUser: User;
   updateUserOnTeam: UserOnTeam;
+};
+
+
+export type MutationChangeTaskGroupsOrderArgs = {
+  boardId: Scalars['Int'];
+  taskGroupIds: Array<Maybe<Scalars['Int']>>;
+};
+
+
+export type MutationCheckTaskArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -295,6 +316,19 @@ export type MutationDeleteUserOnTeamArgs = {
 };
 
 
+export type MutationLoginArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationSignupArgs = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
 export type MutationUpdateBoardArgs = {
   data: UpdateBoardInput;
   id: Scalars['Int'];
@@ -338,6 +372,7 @@ export type Query = {
   allTeams?: Maybe<Array<Maybe<Team>>>;
   allUserOnTeams?: Maybe<Array<Maybe<UserOnTeam>>>;
   allUsers?: Maybe<Array<Maybe<User>>>;
+  authenticatedUser?: Maybe<User>;
   board?: Maybe<Board>;
   root: Scalars['String'];
   task?: Maybe<Task>;
@@ -544,6 +579,8 @@ export enum SortTaskGroupBy {
   IdDesc = 'id_DESC',
   NameAsc = 'name_ASC',
   NameDesc = 'name_DESC',
+  OrderAsc = 'order_ASC',
+  OrderDesc = 'order_DESC',
   TasksAsc = 'tasks_ASC',
   TasksDesc = 'tasks_DESC'
 }
@@ -595,6 +632,7 @@ export enum SortUserOnTeamBy {
 
 export type Task = {
   __typename?: 'Task';
+  checked?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
@@ -607,6 +645,7 @@ export type TaskGroup = {
   description?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
+  order?: Maybe<Scalars['Int']>;
   tasks?: Maybe<Array<Maybe<Task>>>;
 };
 
@@ -658,6 +697,7 @@ export type UpdateTaskGroupInput = {
 };
 
 export type UpdateTaskInput = {
+  checked?: Maybe<Scalars['Boolean']>;
   description?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   taskGroup?: Maybe<RelateToOneTaskGroupInput>;
@@ -691,7 +731,7 @@ export type User = {
   password?: Maybe<Scalars['String']>;
   publicId?: Maybe<Scalars['String']>;
   registeredAt?: Maybe<Scalars['DateTime']>;
-  teams?: Maybe<UserOnTeam>;
+  teams?: Maybe<Array<Maybe<UserOnTeam>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
@@ -701,6 +741,14 @@ export type UserBoardsArgs = {
   skip?: Maybe<Scalars['Int']>;
   sortBy?: Maybe<Array<Maybe<SortBoardBy>>>;
   where?: Maybe<WhereBoardInput>;
+};
+
+
+export type UserTeamsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sortBy?: Maybe<Array<Maybe<SortUserOnTeamBy>>>;
+  where?: Maybe<WhereUserOnTeamInput>;
 };
 
 export type UserOnTeam = {
@@ -763,6 +811,12 @@ export type WhereTaskGroupInput = {
   name_lt?: Maybe<Scalars['String']>;
   name_lte?: Maybe<Scalars['String']>;
   name_not?: Maybe<Scalars['String']>;
+  order_gt?: Maybe<Scalars['String']>;
+  order_gte?: Maybe<Scalars['String']>;
+  order_is?: Maybe<Scalars['String']>;
+  order_lt?: Maybe<Scalars['String']>;
+  order_lte?: Maybe<Scalars['String']>;
+  order_not?: Maybe<Scalars['String']>;
   tasks?: Maybe<WhereTaskInput>;
   tasks_is_null?: Maybe<Scalars['Boolean']>;
 };
@@ -770,6 +824,7 @@ export type WhereTaskGroupInput = {
 export type WhereTaskInput = {
   AND?: Maybe<Array<Maybe<WhereTaskInput>>>;
   OR?: Maybe<Array<Maybe<WhereTaskInput>>>;
+  checked_is?: Maybe<Scalars['Boolean']>;
   description_gt?: Maybe<Scalars['String']>;
   description_gte?: Maybe<Scalars['String']>;
   description_is?: Maybe<Scalars['String']>;
@@ -985,6 +1040,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
+  AuthPayload: ResolverTypeWrapper<AuthPayload>;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   Board: ResolverTypeWrapper<Board>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
@@ -1094,6 +1150,7 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
+  AuthPayload: AuthPayload;
   BigInt: Scalars['BigInt'];
   Board: Board;
   Boolean: Scalars['Boolean'];
@@ -1193,6 +1250,12 @@ export type ResolversParentTypes = ResolversObject<{
   WhereUniqueUserOnTeamInput: WhereUniqueUserOnTeamInput;
   WhereUserInput: WhereUserInput;
   WhereUserOnTeamInput: WhereUserOnTeamInput;
+}>;
+
+export type AuthPayloadResolvers<ContextType = Context, ParentType extends ResolversParentTypes['AuthPayload'] = ResolversParentTypes['AuthPayload']> = ResolversObject<{
+  token?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
@@ -1314,6 +1377,8 @@ export interface MacScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes[
 }
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  changeTaskGroupsOrder?: Resolver<Maybe<ResolversTypes['Board']>, ParentType, ContextType, RequireFields<MutationChangeTaskGroupsOrderArgs, 'boardId' | 'taskGroupIds'>>;
+  checkTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCheckTaskArgs, 'id'>>;
   createBoard?: Resolver<ResolversTypes['Board'], ParentType, ContextType, RequireFields<MutationCreateBoardArgs, 'data'>>;
   createTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationCreateTaskArgs, 'data'>>;
   createTaskGroup?: Resolver<ResolversTypes['TaskGroup'], ParentType, ContextType, RequireFields<MutationCreateTaskGroupArgs, 'data'>>;
@@ -1326,7 +1391,9 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   deleteTeam?: Resolver<Maybe<ResolversTypes['Team']>, ParentType, ContextType, RequireFields<MutationDeleteTeamArgs, 'id'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
   deleteUserOnTeam?: Resolver<Maybe<ResolversTypes['UserOnTeam']>, ParentType, ContextType, RequireFields<MutationDeleteUserOnTeamArgs, 'id'>>;
+  login?: Resolver<Maybe<ResolversTypes['AuthPayload']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   root?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  signup?: Resolver<Maybe<ResolversTypes['AuthPayload']>, ParentType, ContextType, RequireFields<MutationSignupArgs, 'email' | 'name' | 'password'>>;
   updateBoard?: Resolver<ResolversTypes['Board'], ParentType, ContextType, RequireFields<MutationUpdateBoardArgs, 'data' | 'id'>>;
   updateTask?: Resolver<ResolversTypes['Task'], ParentType, ContextType, RequireFields<MutationUpdateTaskArgs, 'data' | 'id'>>;
   updateTaskGroup?: Resolver<ResolversTypes['TaskGroup'], ParentType, ContextType, RequireFields<MutationUpdateTaskGroupArgs, 'data' | 'id'>>;
@@ -1394,6 +1461,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   allTeams?: Resolver<Maybe<Array<Maybe<ResolversTypes['Team']>>>, ParentType, ContextType, RequireFields<QueryAllTeamsArgs, never>>;
   allUserOnTeams?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserOnTeam']>>>, ParentType, ContextType, RequireFields<QueryAllUserOnTeamsArgs, never>>;
   allUsers?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType, RequireFields<QueryAllUsersArgs, never>>;
+  authenticatedUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   board?: Resolver<Maybe<ResolversTypes['Board']>, ParentType, ContextType, RequireFields<QueryBoardArgs, 'where'>>;
   root?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   task?: Resolver<Maybe<ResolversTypes['Task']>, ParentType, ContextType, RequireFields<QueryTaskArgs, 'where'>>;
@@ -1416,6 +1484,7 @@ export interface SafeIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTy
 }
 
 export type TaskResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Task'] = ResolversParentTypes['Task']> = ResolversObject<{
+  checked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1428,6 +1497,7 @@ export type TaskGroupResolvers<ContextType = Context, ParentType extends Resolve
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  order?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   tasks?: Resolver<Maybe<Array<Maybe<ResolversTypes['Task']>>>, ParentType, ContextType, RequireFields<TaskGroupTasksArgs, never>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -1476,7 +1546,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   password?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   publicId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   registeredAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  teams?: Resolver<Maybe<ResolversTypes['UserOnTeam']>, ParentType, ContextType>;
+  teams?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserOnTeam']>>>, ParentType, ContextType, RequireFields<UserTeamsArgs, never>>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -1498,6 +1568,7 @@ export interface VoidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type Resolvers<ContextType = Context> = ResolversObject<{
+  AuthPayload?: AuthPayloadResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
   Board?: BoardResolvers<ContextType>;
   Byte?: GraphQLScalarType;

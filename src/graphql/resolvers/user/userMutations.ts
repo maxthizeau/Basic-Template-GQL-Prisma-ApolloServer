@@ -4,6 +4,7 @@ import { getRandomIntString } from "src/utils/numberFunctions"
 import { removeSpecialChar } from "../../../utils/stringFunctions"
 import { Prisma } from ".prisma/client"
 import { rules } from "../../accessRules"
+import { ForbiddenError } from "apollo-server-errors"
 
 export function generatePublicId(name: string): string {
   return `${name}#${getRandomIntString(5)}`
@@ -15,7 +16,7 @@ const userMutations: IResolvers = {
       // Access : only admin should access this mutation. Users should use signup mutation
       const access: any = rules.isAdmin(context)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
 
       const { data } = args
@@ -26,7 +27,7 @@ const userMutations: IResolvers = {
       const user = { ...data, name: removeSpecialChar(data.name) }
       let publicId = generatePublicId(user.name)
       user.publicId = publicId
-      console.log(user)
+
       // TO DO : Verify unique publicId
 
       return await context.prisma.user.create({ data: user })
@@ -35,7 +36,7 @@ const userMutations: IResolvers = {
       // Access : a user should only update himself
       const access: any = rules.canUpdateUser(context, args.id)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
 
       return await context.prisma.user.update({ where: { id: Number(args.id) }, data: { ...args.data } })
@@ -44,7 +45,7 @@ const userMutations: IResolvers = {
       // Access : only admin can delete users, user cannot delete his account himself
       const access: any = rules.isAdmin(context)
       if (!access) {
-        throw new Error("You don't have permission to access this resource")
+        throw new ForbiddenError("You don't have permission to access this resource")
       }
 
       return await context.prisma.user.delete({ where: { id: Number(args.id) } })

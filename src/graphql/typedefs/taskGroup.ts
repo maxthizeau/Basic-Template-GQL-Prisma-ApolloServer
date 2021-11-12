@@ -5,6 +5,7 @@ const taskGroup = gql`
     id: Int!
     name: String
     description: String
+    order: Int
     tasks(where: WhereTaskInput, sortBy: [SortTaskBy], first: Int, skip: Int): [Task]
     board: Board
   }
@@ -28,6 +29,7 @@ const taskGroupTypesDefs = gql`
     createTaskGroup(data: CreateTaskGroupInput!): TaskGroup!
     updateTaskGroup(id: Int!, data: UpdateTaskGroupInput!): TaskGroup!
     deleteTaskGroup(id: Int!): TaskGroup
+    changeTaskOrderFromTaskGroup(taskGroupId: Int!, taskIds: [Int]!): TaskGroup
   }
 `
 
